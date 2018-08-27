@@ -1,8 +1,9 @@
 import sys
+import os
 import traceback
 import psycopg2
 
-connect = """
+default_connect = """
 dbname=larry user=larry
 """
 
@@ -34,6 +35,9 @@ Create table questions (
 );
 """
 
+def get_connect_string():
+	return os.environ.get('DATABASE_URL', default_connect)
+
 def get_questions():
 	""" 
 	get the questions to be displayed on the screen.
@@ -41,7 +45,7 @@ def get_questions():
 	results = []
 	try:
 		print("-- Get Questions --");
-		conn = psycopg2.connect(connect)
+		conn = psycopg2.connect(get_connect_string(), sslmode='require')
 		cur = conn.cursor()
 		res = cur.execute(select_questions)
 		for r in cur:

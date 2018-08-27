@@ -6,8 +6,7 @@ import psycopg2
 import json
 import sql.sql as sql
 
-
-print('Hello World.')
+print("--- Starting", __file__)
 
 app = Flask(__name__)
 CORS(app)

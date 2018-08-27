@@ -1,12 +1,13 @@
 
 import sys
+import os
 import traceback
 import psycopg2
 
 import data
 import sql
 
-print("Hello World")
+print("--- Starting", __file__)
 
 def load_questions():
 	""" 
@@ -28,12 +29,12 @@ def load_questions():
 def init_questions():
 	""" 
 	Load the questions into the questions database. It is important
-	if there is existing data that the code does not change. All the weekly
+	if there is existing data that the question-code does not change. All the weekly
 	data is stored based on the code.
 	"""
 	try:
 		print("-- Init Questions --");
-		conn = psycopg2.connect(sql.connect)
+		conn = psycopg2.connect(sql.get_connect_string(), sslmode='require')
 		cur = conn.cursor()
 		try:
 			res = cur.execute(sql.drop_questions)
@@ -60,14 +61,30 @@ def init_questions():
 		conn.close()
 
 
+def questions():
+	for q in sql.get_questions():
+		print('-', q)
 
-# questions = load_questions()
-# for q in questions:
-# 	print(q)
+def connect():
+	print("Connect String:",sql.get_connect_string())
 
-# print('q3', questions[3])
+def usage():
+	print("""
+Pass one of the following options:
 
-init_questions()
+reload-questions : will reload the questions database
+questions : will show the current questions loaded in teh database
+connect : will show the connection string that will be used
 
-# print(load_questions.__doc__)
-# print(__name__)
+""")
+
+options = {
+	"reload-questions" : init_questions,
+	"questions" : questions,
+	"connect" : connect,
+	"usage" : usage,
+}
+
+option = sys.argv[1] if len(sys.argv) > 1 else 'usage'
+f = options.get(option, usage)
+f()

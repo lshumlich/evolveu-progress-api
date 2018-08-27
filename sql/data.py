@@ -10,6 +10,7 @@ questions = """
 logic@Basic logic (If/Then/Else/Case/loops), ignoring language
 basds@Basic data structures (Maps / Arrays)
 python@Python
+git@GIT
 html@HTML
 css@CSS
 oo@Object Oriented Concepts
