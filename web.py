@@ -56,3 +56,6 @@ def playWithDb():
 # print('sql connect:',sql.connect)
 
 # print(sql.get_questions())
+
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=True)
