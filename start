@@ -1,2 +1,2 @@
 echo --- starting web app local ---
-gunicorn web:app --log-file=-
+gunicorn web:app --reload --log-file=-

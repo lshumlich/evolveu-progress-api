@@ -29,3 +29,8 @@ mentor@Mentoring
 problem@Problem Solving (Debugging)
 pm@Project Management Skills (Scope, Expectation, Schedule, Budget, Burndown chart)
 """
+
+users = """
+1,Lorraine Shumlich,lorraine.shumlich@gmail.com,2018-08-06
+2,Larry Shumlich,lshumlich@gmail.com,2018-08-06
+"""

@@ -1,0 +1,6 @@
+[
+  "tests/test_dates.py::TestDates::test_last_monday",
+  "tests/test_dates.py::TestDates::test_my_monday",
+  "tests/test_dates.py::TestDates::test_next_monday",
+  "tests/test_dates.py::TestDates::test_to_date"
+]
