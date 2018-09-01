@@ -1,11 +1,5 @@
 {
   "tests/test_dates.py::MyFirstTests::test_hello": true,
   "tests/test_dates.py::test_hello": true,
-  "tests/test_sql.py": true,
-  "tests/test_sql.py::TestSql::test_play": true,
-  "tests/test_sql.py::TestSql::test_questions": true,
-  "tests/test_sql.py::TestSql::test_results": true,
-  "tests/test_sql.py::TestSql::test_update_going_well": true,
-  "tests/test_sql.py::TestSql::test_update_results": true,
-  "tests/test_sql.py::TestSql::test_users": true
+  "tests/test_sql.py::TestSql::test_update_going_well": true
 }

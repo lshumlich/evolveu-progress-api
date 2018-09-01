@@ -5,6 +5,7 @@ import datetime
 import json
 import traceback
 import psycopg2
+from psycopg2 import sql 
 import utils.dates
 
 default_connect = """
@@ -58,10 +59,6 @@ insert_users = """
 insert into users (id, name, email, start_date, uuid) values(%s, %s, %s, %s, %s)
 """
 
-select_user_by_ggid = """
-select id, name from users where uuid = %s;
-"""
-
 # --- Results
 
 drop_results = """
@@ -113,6 +110,11 @@ select id, name, email, uuid, start_date from users;
 def get_users():
 	return select(get_users_string,None)
 
+
+select_user_by_ggid = """
+select id, name, start_date from users where uuid = %s;
+"""
+
 def get_user_by_uuid(ggid):
 	return select(select_user_by_ggid,[ggid])
 
@@ -137,7 +139,7 @@ def get_results_by_student_date(student, date):
 
 def get_result_object_by_student_date(student_id, date):
 	result = get_results_by_student_date(student_id, date)
-	return json.loads(result[0][0])
+	return json.loads(result[0][0]),result[0][1],result[0][2],result[0][3]
 
 
 update_result_by_student_date_string = """
@@ -147,18 +149,20 @@ update results
 """
 
 def update_result_by_student_date(student_id, date, code, score):
-	scores = get_result_object_by_student_date(student_id, date)
+	results = get_result_object_by_student_date(student_id, date)
+	scores = results[0]
 	scores[code] = score
 	sql_util(update_result_by_student_date_string,[json.dumps(scores), student_id, date])
 
-update_going_well_by_student_date_string = """
-update results
-	set going_well = (%s)
-	where student = (%s) and date = (%s);
-"""
 
-def update_going_well_by_student_date(student_id, date, going_well):
-	sql_util(update_going_well_by_student_date_string,[going_well, student_id, date])
+def update_result_text_student_date(student_id, date, attribute, value):
+	sql = \
+f"""
+update results
+	set {attribute} = %s
+	where student = %s and date = %s;
+"""
+	sql_util(sql,[value, student_id, date])
 
 # ----- general utilitis
 
@@ -177,6 +181,7 @@ def select(sql, parms):
 	except:
 		print('***We had a problem Huston...', sys.exc_info())
 		traceback.print_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+		raise
 	finally:
 		cur.close()
 		conn.close()
@@ -200,6 +205,7 @@ def sql_util(sql, parms):
 	except:
 		print('***We had a problem Huston...', sys.exc_info())
 		traceback.print_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+		raise
 	finally:
 		cur.close()
 		conn.close()

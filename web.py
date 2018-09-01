@@ -42,7 +42,11 @@ def results(uuid=None, date=None):
 	user = sql.get_user_by_uuid(uuid)
 	if not user:
 		return '',404
+
+	print(user)
 	id = user[0][0]
+	start_date = user[0][2]
+	print (start_date)
 
 	this_monday = utils.dates.my_monday(datetime.datetime.now().date())
 
@@ -55,12 +59,26 @@ def results(uuid=None, date=None):
 	next_monday = utils.dates.next_monday(monday)
 	last_monday = utils.dates.last_monday(monday)
 
-	if next_monday > monday:
+	if next_monday > this_monday:
 		next_monday = ''
 
-	results = sql.get_result_object_by_student_date(id, str(monday))
+	if last_monday < start_date:
+		last_monday = ''
 
-	return jsonify({'results':results, 'last_monday': str(last_monday), 'this_monday': str(monday), 'next_monday': str(next_monday)})
+	print(this_monday, monday)
+	allow_input = True if (this_monday == monday) else False 
+	# allow_input = False
+
+	results, going_well, issues, what_to_try  = sql.get_result_object_by_student_date(id, str(monday))
+
+	return jsonify({'results':results, 
+					'last_monday': str(last_monday), 
+					'this_monday': str(monday), 
+					'next_monday': str(next_monday),
+					'allow_input': allow_input,
+					'going_well': going_well,
+					'issues': issues,
+					'what_to_try': what_to_try})
 
 @app.route("/update", methods = ['POST'])
 def update():
@@ -78,7 +96,8 @@ def update():
 	if content['type'] == 'score':
 		sql.update_result_by_student_date(id, content['date'], content['code'], int(content['value']))
 	else:
-		print('We should update the text:',content['code'], content['value'])
+		sql.update_result_text_student_date(id, content['date'], content['code'], content['value'])
+		# print('We should update the text:',content['code'], content['date'], content['code'], int(content['value'])
 
 	return jsonify({'status': 'ok'}), 200
 

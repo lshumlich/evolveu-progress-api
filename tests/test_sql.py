@@ -45,8 +45,19 @@ class TestSql(unittest.TestCase):
 		self.assertEqual('', r[0][2])
 		self.assertEqual('', r[0][3])
 
-	def test_update_going_well(self):
-		sql.sql.update_going_well_by_student_date(1, '2018-09-03', 'Its going sooo well')
+	def test_update_results_text(self):
+		# Big assumptions here which is bad the student already exists
+		going_well = 'Everything just everything'
+		issues = 'We have sooo many issues'
+		what_to_try = 'Lets try it all'
+		sql.sql.update_result_text_student_date(1, '2018-09-03', 'going_well', going_well)
+		sql.sql.update_result_text_student_date(1, '2018-09-03', 'issues', issues)
+		sql.sql.update_result_text_student_date(1, '2018-09-03', 'what_to_try', what_to_try)
+		result = sql.sql.get_results_by_student_date(1, '2018-09-03')
+		print(result)
+		self.assertEqual(going_well, result[0][1])
+		self.assertEqual(issues, result[0][2])
+		self.assertEqual(what_to_try, result[0][3])
 
 	def test_update_results(self):
 		# Big assumptions here which is bad the student already exists
@@ -64,16 +75,10 @@ class TestSql(unittest.TestCase):
 		self.assertEqual(r['logic'], value)
 		self.assertEqual(r['sql'], value)
 
-
-
 	def test_users(self):
 		sql.sqlutil.init_users()
-		users,cols = sql.sql.get_users()
-		print(users)
-		print(cols)
-		for u in users:
-			print(u[cols.id])
-		# self.assertTrue(len(users) > 1)
+		users = sql.sql.get_users()
+		self.assertTrue(len(users) > 1)
 
 	def test_questions(self):
 		sql.sqlutil.init_questions()
@@ -82,10 +87,3 @@ class TestSql(unittest.TestCase):
 
 	def test_play(self):
 		print('Hello')
-		m = {'one':1, 'two':2, 'three':'three'}
-		o = ('one':1, 'two':2, 'three':'three')
-		print(m)
-		print(o)
-		print(m['one'])
-		print(m.one)
-		print(type(m))
