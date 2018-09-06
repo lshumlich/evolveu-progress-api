@@ -43,10 +43,10 @@ def results(uuid=None, date=None):
 	if not user:
 		return '',404
 
-	print(user)
+	# print(user)
 	id = user[0][0]
 	start_date = user[0][2]
-	print (start_date)
+	# print (start_date)
 
 	this_monday = utils.dates.my_monday(datetime.datetime.now().date())
 
@@ -65,7 +65,7 @@ def results(uuid=None, date=None):
 	if last_monday < start_date:
 		last_monday = ''
 
-	print(this_monday, monday)
+	# print(this_monday, monday)
 	allow_input = True if (this_monday == monday) else False 
 	# allow_input = False
 
@@ -100,6 +100,16 @@ def update():
 		# print('We should update the text:',content['code'], content['date'], content['code'], int(content['value'])
 
 	return jsonify({'status': 'ok'}), 200
+
+@app.route("/adduser/<uuid>/")
+def adduser(uuid):
+	print(request)
+	print(request.args)
+	print(uuid)
+	print(request.args.get('user'))
+	print(request.args.get('email'))
+	print(request.args.get('startDate'))
+	return "just playing"
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

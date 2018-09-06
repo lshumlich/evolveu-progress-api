@@ -180,6 +180,17 @@ def uuid_gen():
 def connect():
 	print("Connect String:",sql.get_connect_string())
 
+# May not use this
+def add_user():
+	if len(sys.argv) < 2:
+		pirnt('More parms are needed')
+
+	url = sys.argv[2]
+	uuid = sys.argv[3]
+
+	print(url,uuid)
+
+
 def test():
 	"""
 	Thursday - Tuesday - Enter for that date
@@ -207,6 +218,7 @@ get-user-by-uuid	: get a user based on uuid
 init-results		: drop and create the results table
 uuid 				: generate 20 uuid
 connect 			: will show the connection string that will be used
+add-user 			: add a new user
 test				: just some play stuff
 """)
 
@@ -218,6 +230,7 @@ options = {
 	"init-results" : init_results,
 	"uuid" : uuid_gen,
 	"connect" : connect,
+	"add-user" : add_user,
 	"test" : test,
 	"usage" : usage,
 }
