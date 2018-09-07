@@ -105,7 +105,7 @@ def update():
 def adduser(uuid):
 	# print(request)
 	# print(request.args)
-	print(uuid)
+	print('"'+uuid+'"')
 	id = request.args.get('id')
 	user = request.args.get('user')
 	email = request.args.get('email')
@@ -114,15 +114,20 @@ def adduser(uuid):
 	# sql.insert_users(100,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03')
 
 	user_lookup = sql.get_user_by_uuid(uuid)
-	if not user_lookup:
-		print('returning a 404')
-		return '',404
+	print(user_lookup)
+	if user_lookup:
+		print('Admin:', user_lookup[0][3])
+		admin = user_lookup[0][3]
+		if admin:
+			print('inserting')
+			sql.insert_users(int(id),user,email,startDate,False)
 
-	print('inserting')
-	sql.insert_users(int(id),user,email,startDate)
+			return "just playing"
 
-	print('returning')
-	return "just playing"
+	print('returning a 404')
+	return '',404
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

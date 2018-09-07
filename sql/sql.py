@@ -41,7 +41,8 @@ Create table users (
 	name varChar(50) not null,
 	email varChar(50) not null,
 	uuid varChar(36) not null,
-	start_date date not null
+	start_date date not null,
+	admin boolean not null
 );
 """
 
@@ -92,17 +93,17 @@ def get_questions():
 # f8862239-ec71-43b9-b9a9-5cf918040f08 (Sample of a uuid)
 
 insert_users_string = """
-insert into users (id, name, email, start_date, uuid) values(%s, %s, %s, %s, %s)
+insert into users (id, name, email, start_date, admin, uuid) values(%s, %s, %s, %s, %s, %s)
 """
 
-def insert_users(id, name, email, start_date):
+def insert_users(id, name, email, start_date, admin):
 	""" 
 	Insert a single user into the users table.
 	"""
-	return sql_util(insert_users_string, [id, name, email, start_date, str(uuid.uuid4())])
+	return sql_util(insert_users_string, [id, name, email, start_date, admin, str(uuid.uuid4())])
 
 get_users_string = """
-select id, name, email, uuid, start_date from users;
+select id, name, email, start_date, admin, uuid from users;
 """
 
 def get_users():
@@ -110,7 +111,7 @@ def get_users():
 
 
 select_user_by_ggid = """
-select id, name, start_date from users where uuid = %s;
+select id, name, start_date, admin from users where uuid = %s;
 """
 
 def get_user_by_uuid(ggid):

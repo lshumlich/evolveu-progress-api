@@ -93,11 +93,11 @@ def init_users():
 		cur = conn.cursor()
 		try:
 			res = cur.execute(sql.sql.drop_users)
-		except psycopg2.ProgrammingError as e:
+		except:
 			print('Delete failed',sys.exc_info()[1])
+			conn.rollback()
 
 		res = cur.execute(sql.sql.create_users)
-
 
 		conn.commit()
 	except psycopg2.IntegrityError:
@@ -112,7 +112,7 @@ def init_users():
 		cur.close()
 		conn.close()
 
-	sql.sql.insert_users(100,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03')
+	sql.sql.insert_users(1000,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03', True)
 	print('--Users Inserted: 1')
 
 def get_user_by_uuid():
@@ -135,8 +135,9 @@ def init_results():
 		cur = conn.cursor()
 		try:
 			res = cur.execute(sql.sql.drop_results)
-		except psycopg2.ProgrammingError as e:
+		except:
 			print('Delete failed',sys.exc_info()[1])
+			conn.rollback()
 
 		res = cur.execute(sql.sql.create_results)
 
@@ -155,7 +156,7 @@ def init_results():
 	return 0
 
 def connect():
-	print("Connect String:",sql.get_connect_string())
+	print("Connect String:", sql.sql.get_connect_string())
 
 def test():
 	"""

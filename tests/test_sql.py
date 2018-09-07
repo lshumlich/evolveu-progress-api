@@ -54,7 +54,6 @@ class TestSql(unittest.TestCase):
 		sql.sql.update_result_text_student_date(1, '2018-09-03', 'issues', issues)
 		sql.sql.update_result_text_student_date(1, '2018-09-03', 'what_to_try', what_to_try)
 		result = sql.sql.get_results_by_student_date(1, '2018-09-03')
-		print(result)
 		self.assertEqual(going_well, result[0][1])
 		self.assertEqual(issues, result[0][2])
 		self.assertEqual(what_to_try, result[0][3])
