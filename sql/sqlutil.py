@@ -13,7 +13,6 @@ import os
 import datetime
 import traceback
 import psycopg2
-import uuid
 
 import sql.sql
 import sql.data
@@ -82,26 +81,10 @@ def questions():
 
 # ------ 	Users
 
-def load_users():
-	""" 
-	Load the users into an internal array so we can use them later.
-	"""
-
-	results = []
-	# columns = ('id', 'name', 'email', 'uuid')
-
-	for l in sql.data.users.split('\n'):
-		if l:
-			# u = str(uuid.uuid4())
-			# results.append(dict(zip(columns,[order] + l.split('@'))))
-			results.append(l.split(',') + [str(uuid.uuid4())])
-
-	return results
-
 def init_users():
 	""" 
-	Load the users into the users database. It is important
-	if there is existing data that user-id does not change. The user-uuid 
+	Delete the table (if it exists) and create a new users table. Insert one user so
+	that that user's UUID can be used to add additional users. The user-uuid 
 	is just used for security reasons.
 	"""
 	try:
@@ -114,12 +97,7 @@ def init_users():
 			print('Delete failed',sys.exc_info()[1])
 
 		res = cur.execute(sql.sql.create_users)
-		users = load_users()
-		count = 0
-		for u in users:
-			res = cur.execute(sql.sql.insert_users, u)
-			count += 1
-		print('--Users Inserted:',count)
+
 
 		conn.commit()
 	except psycopg2.IntegrityError:
@@ -133,6 +111,9 @@ def init_users():
 	finally:
 		cur.close()
 		conn.close()
+
+	sql.sql.insert_users(100,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03')
+	print('--Users Inserted: 1')
 
 def get_user_by_uuid():
 	if len(sys.argv) < 2:
@@ -173,23 +154,8 @@ def init_results():
 		conn.close()
 	return 0
 
-def uuid_gen():
-	for i in range(20):
-		print(uuid.uuid4())
-
 def connect():
 	print("Connect String:",sql.get_connect_string())
-
-# May not use this
-def add_user():
-	if len(sys.argv) < 2:
-		pirnt('More parms are needed')
-
-	url = sys.argv[2]
-	uuid = sys.argv[3]
-
-	print(url,uuid)
-
 
 def test():
 	"""
@@ -211,26 +177,23 @@ def usage():
 	print("""
 Pass one of the following options:
 
-reload-questions 	: will reload the questions database
-questions 			: will show the current questions loaded in teh database
-reload-users 		: will reload the users database
-get-user-by-uuid	: get a user based on uuid
-init-results		: drop and create the results table
-uuid 				: generate 20 uuid
-connect 			: will show the connection string that will be used
-add-user 			: add a new user
-test				: just some play stuff
+init-users          : will initialize the users database and add one user
+init-results        : drop and create the results table
+reload-questions    : will reload the questions database
+---
+questions           : will show the current questions loaded in teh database
+get-user-by-uuid    : get a user based on uuid
+connect             : will show the connection string that will be used
+test                : just some play stuff
 """)
 
 options = {
 	"reload-questions" : init_questions,
 	"questions" : questions,
-	"reload-users" : init_users,
+	"init-users" : init_users,
 	"get-user-by-uuid" : get_user_by_uuid,
 	"init-results" : init_results,
-	"uuid" : uuid_gen,
 	"connect" : connect,
-	"add-user" : add_user,
 	"test" : test,
 	"usage" : usage,
 }

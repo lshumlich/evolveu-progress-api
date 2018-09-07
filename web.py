@@ -31,10 +31,6 @@ def register(uuid=None):
 def questions():
 	return jsonify(sql.get_questions())
 
-@app.route("/questions2")
-def questions2():
-	return jsonify(sql.get_questions2())
-
 @app.route("/results/<uuid>/")
 @app.route("/results/<uuid>/<date>")
 def results(uuid=None, date=None):
@@ -83,7 +79,7 @@ def results(uuid=None, date=None):
 @app.route("/update", methods = ['POST'])
 def update():
 	content = request.get_json()
-	print(content)
+	# print(content)
 
 	user = sql.get_user_by_uuid(content['uuid'])
 	if not user:
@@ -101,14 +97,31 @@ def update():
 
 	return jsonify({'status': 'ok'}), 200
 
+
+#
+# 
+#
 @app.route("/adduser/<uuid>/")
 def adduser(uuid):
-	print(request)
-	print(request.args)
+	# print(request)
+	# print(request.args)
 	print(uuid)
-	print(request.args.get('user'))
-	print(request.args.get('email'))
-	print(request.args.get('startDate'))
+	id = request.args.get('id')
+	user = request.args.get('user')
+	email = request.args.get('email')
+	startDate = request.args.get('startDate')
+
+	# sql.insert_users(100,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03')
+
+	user_lookup = sql.get_user_by_uuid(uuid)
+	if not user_lookup:
+		print('returning a 404')
+		return '',404
+
+	print('inserting')
+	sql.insert_users(int(id),user,email,startDate)
+
+	print('returning')
 	return "just playing"
 
 if __name__ == '__main__':

@@ -4,13 +4,12 @@ import os
 import datetime
 import json
 import traceback
+import uuid
+
 import psycopg2
 from psycopg2 import sql 
 import utils.dates
 
-default_connect = """
-dbname=larry user=larry
-"""
 
 # --- Questions
 
@@ -21,21 +20,13 @@ Drop table questions;
 create_questions = """
 Create table questions (
 	Seq integer not null,
-	Code varChar(10) not null unique primary key,
+	Code varChar(16) not null unique primary key,
 	Question text not null
 );
 """
 
 insert_questions = """
 insert into questions (seq, code, question) values(%s, %s, %s)
-"""
-
-select_questions = """
-select question from questions order by seq;
-"""
-
-select_questions2 = """
-select code,question from questions order by seq;
 """
 
 # --- Users
@@ -52,11 +43,6 @@ Create table users (
 	uuid varChar(36) not null,
 	start_date date not null
 );
-"""
-# f8862239-ec71-43b9-b9a9-5cf918040f08
-
-insert_users = """
-insert into users (id, name, email, start_date, uuid) values(%s, %s, %s, %s, %s)
 """
 
 # --- Results
@@ -83,25 +69,37 @@ insert into
 	values  (%s, %s, %s, %s, %s, %s) returning id;
 """
 
-get_results_by_student_date_string = """
-select result, going_well, issues, what_to_try
-	from results
-	where student = %s and date = %s;
+default_connect = """
+dbname=larry user=larry
 """
 
 def get_connect_string():
 	return os.environ.get('DATABASE_URL', default_connect)
 
-def get_questions():
-	return select(select_questions,[])
 
-def get_questions2():
+select_questions = """
+select code,question from questions order by seq;
+"""
+
+def get_questions():
 	results = []
 	columns = ('code', 'question')
-	questions = select(select_questions2,[])
+	questions = select(select_questions,[])
 	for q in questions:
 		results.append(dict(zip(columns,q)))
 	return results
+
+# f8862239-ec71-43b9-b9a9-5cf918040f08 (Sample of a uuid)
+
+insert_users_string = """
+insert into users (id, name, email, start_date, uuid) values(%s, %s, %s, %s, %s)
+"""
+
+def insert_users(id, name, email, start_date):
+	""" 
+	Insert a single user into the users table.
+	"""
+	return sql_util(insert_users_string, [id, name, email, start_date, str(uuid.uuid4())])
 
 get_users_string = """
 select id, name, email, uuid, start_date from users;
@@ -120,6 +118,13 @@ def get_user_by_uuid(ggid):
 
 def insert_results(data):
 	return sql_util(insert_results_string, data)
+
+get_results_by_student_date_string = """
+select result, going_well, issues, what_to_try
+	from results
+	where student = %s and date = %s;
+
+"""
 
 def get_results_by_student_date(student, date):
 	r = select(get_results_by_student_date_string, [student, date])

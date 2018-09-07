@@ -65,24 +65,24 @@ class TestSql(unittest.TestCase):
 		sql.sql.update_result_by_student_date(1, '2018-09-03', 'logic', value)
 		sql.sql.update_result_by_student_date(1, '2018-09-03', 'sql', value)
 		r = sql.sql.get_result_object_by_student_date(1, '2018-09-03')
-		self.assertEqual(r['logic'], value)
-		self.assertEqual(r['sql'], value)
+		self.assertEqual(r[0]['logic'], value)
+		self.assertEqual(r[0]['sql'], value)
 
 		value = 7
 		sql.sql.update_result_by_student_date(1, '2018-09-03', 'logic', value)
 		sql.sql.update_result_by_student_date(1, '2018-09-03', 'sql', value)
 		r = sql.sql.get_result_object_by_student_date(1, '2018-09-03')
-		self.assertEqual(r['logic'], value)
-		self.assertEqual(r['sql'], value)
+		self.assertEqual(r[0]['logic'], value)
+		self.assertEqual(r[0]['sql'], value)
 
 	def test_users(self):
 		sql.sqlutil.init_users()
 		users = sql.sql.get_users()
-		self.assertTrue(len(users) > 1)
+		self.assertEqual(1, len(users))
 
 	def test_questions(self):
 		sql.sqlutil.init_questions()
-		questions = sql.sql.get_questions2()
+		questions = sql.sql.get_questions()
 		self.assertTrue(len(questions) > 1)
 
 	def test_play(self):
