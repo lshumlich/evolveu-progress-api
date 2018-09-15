@@ -1,15 +1,24 @@
 """
 
+This is the web component of the technical progress app. To start execute 
+start from the bash / terminal: 
+
+./start
+DATABASE_URL="dbname=larry2 user=larry" ./start
+
 """
 import datetime
-from flask import Flask
+import io
+from flask import Flask, send_file
 from flask import jsonify
 from flask import request
 from flask_cors import CORS
+# from openpxl import Workbook
 import psycopg2
 import json
 import sql.sql as sql
 import utils.dates
+import utils.results
 
 print("--- Starting", __file__)
 
@@ -127,7 +136,26 @@ def adduser(uuid):
 	print('returning a 404')
 	return '',404
 
+@app.route("/excel_results/<uuid>/")
+def excel_results(uuid):
+	user_lookup = sql.get_user_by_uuid(uuid)
+	print(user_lookup)
+	if user_lookup:
+		print('Admin:', user_lookup[0][3])
+		admin = user_lookup[0][3]
+		if admin:
+			out = io.BytesIO()
+			wb = utils.results.get_results()
+			wb.save(out)
+			out.seek(0)
 
+			return send_file(
+				out, 
+				mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		        attachment_filename='results.xlsx', 
+		        as_attachment=True)
+	print('returning a 404')
+	return '',404
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

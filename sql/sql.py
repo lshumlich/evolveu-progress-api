@@ -148,6 +148,19 @@ def get_result_object_by_student_date(student_id, date):
 	return json.loads(result[0][0]),result[0][1],result[0][2],result[0][3]
 
 
+get_results_string = """
+select date, name, result, going_well, issues, what_to_try
+	from results, users
+	where
+	student = users.id
+	order by date, name;
+"""
+
+def get_results():
+	r = select(get_results_string, [])
+	return r
+
+
 update_result_by_student_date_string = """
 update results
 	set result = %s

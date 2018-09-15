@@ -45,6 +45,13 @@ class TestSql(unittest.TestCase):
 		self.assertEqual('', r[0][2])
 		self.assertEqual('', r[0][3])
 
+
+	def test_get_results_by_date(self):
+		# Test getting all the records for the date
+		results = sql.sql.get_results_by_date('2018-09-24')
+		for r in results:
+			print(r);
+
 	def test_update_results_text(self):
 		# Big assumptions here which is bad the student already exists
 		going_well = 'Everything just everything'
