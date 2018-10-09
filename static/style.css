@@ -1,0 +1,15 @@
+
+
+
+.border1 {
+	border: 1px solid black;
+	border-spacing: 0px;
+	padding: 3px;
+}
+
+.center80 {
+    margin: auto;
+    width: 80%;
+	border-spacing: 0px;
+    padding: 10px;
+}

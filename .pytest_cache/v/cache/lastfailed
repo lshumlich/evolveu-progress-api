@@ -1,6 +1,7 @@
 {
   "tests/test_dates.py::MyFirstTests::test_hello": true,
   "tests/test_dates.py::test_hello": true,
+  "tests/test_sql.py::TestSql::test_get_results_by_date": true,
   "tests/test_sql.py::TestSql::test_insert_users": true,
   "tests/test_sql.py::TestSql::test_update_going_well": true
 }

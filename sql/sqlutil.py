@@ -114,7 +114,8 @@ def init_users():
 		conn.close()
 
 	sql.sql.insert_users(1000,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03', True)
-	print('--Users Inserted: 1')
+	sql.sql.insert_users(1001,'Lorraine Shumlich', 'lshumlich@gmail.com', '2018-09-03', True)
+	print('--Users Inserted: 2')
 
 def get_user_by_uuid():
 	if len(sys.argv) < 2:

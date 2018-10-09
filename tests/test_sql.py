@@ -6,12 +6,15 @@ PYTHONPATH=. pytest
 --- Select only tests that have questions in the test name and don't hide the output
 PYTHONPATH=. pytest -k questions -s
 PYTHONPATH=. pytest -s
+PYTHONPATH=. pytest tests/test_sql.py -k _obj -s
+
 
 """
 import unittest
 import datetime
 import sql.sql
 import sql.sqlutil
+import things.results
 
 class TestSql(unittest.TestCase):
 
@@ -45,13 +48,6 @@ class TestSql(unittest.TestCase):
 		self.assertEqual('', r[0][2])
 		self.assertEqual('', r[0][3])
 
-
-	def test_get_results_by_date(self):
-		# Test getting all the records for the date
-		results = sql.sql.get_results_by_date('2018-09-24')
-		for r in results:
-			print(r);
-
 	def test_update_results_text(self):
 		# Big assumptions here which is bad the student already exists
 		going_well = 'Everything just everything'
@@ -84,12 +80,62 @@ class TestSql(unittest.TestCase):
 	def test_users(self):
 		sql.sqlutil.init_users()
 		users = sql.sql.get_users()
-		self.assertEqual(1, len(users))
+		self.assertEqual(2, len(users))
 
 	def test_questions(self):
 		sql.sqlutil.init_questions()
 		questions = sql.sql.get_questions()
 		self.assertTrue(len(questions) > 1)
+
+	def test_get_results_obj(self):
+		sql.sqlutil.init_users()
+		self.assertEqual(0, sql.sqlutil.init_results())
+
+		result = '{"sql":1,"logic":2}'
+		s = [1001,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
+		sql.sql.insert_results(s)
+
+		s = [1000,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		sql.sql.insert_results(s)
+
+		result = sql.sql.get_results_obj()
+		self.assertEqual(2, len(result))
+
+		self.assertEqual(3, result[0].total())
+
+
+		result = sql.sql.get_results_obj(date='2017-01-01')
+		self.assertEqual(0, len(result))
+
+		result = sql.sql.get_results_obj(date='2018-09-03')
+		self.assertEqual(1, len(result))
+		self.assertEqual(datetime.date(2018, 9, 3), result[0].date)
+
+		result = sql.sql.get_results_obj(date='2018-09-10')
+		self.assertEqual(1, len(result))
+		self.assertEqual(datetime.date(2018, 9, 10), result[0].date)
+
+		result = sql.sql.get_results_obj(student=1000)
+		self.assertEqual(1, len(result))
+		self.assertEqual("Larry Shumlich", result[0].student)
+
+		result = sql.sql.get_results_obj(student=1001)
+		self.assertEqual(1, len(result))
+		self.assertEqual("Lorraine Shumlich", result[0].student)
+		self.assertEqual("Lorraine", result[0].first_name())
+
+
+		result = sql.sql.get_results_obj(order = "name")
+		self.assertEqual(2, len(result))
+		self.assertEqual("Larry Shumlich", result[0].student)
+		self.assertEqual("Lorraine Shumlich", result[1].student)
+
+		result = sql.sql.get_results_obj(order = "date")
+		self.assertEqual(2, len(result))
+		self.assertEqual(datetime.date(2018, 9, 3), result[0].date)
+		self.assertEqual(datetime.date(2018, 9, 10), result[1].date)
+
+		result = sql.sql.get_results_obj(order = "date, name")
 
 	def test_play(self):
 		print('Hello')

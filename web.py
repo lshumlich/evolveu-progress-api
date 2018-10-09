@@ -12,6 +12,7 @@ import io
 from flask import Flask, send_file
 from flask import jsonify
 from flask import request
+from flask import render_template
 from flask_cors import CORS
 # from openpxl import Workbook
 import psycopg2
@@ -156,6 +157,20 @@ def excel_results(uuid):
 		        as_attachment=True)
 	print('returning a 404')
 	return '',404
+
+@app.route("/comments/<uuid>/<date>/")
+def comments(uuid, date):
+	user_lookup = sql.get_user_by_uuid(uuid)
+	print(user_lookup)
+	if user_lookup:
+		print('Admin:', user_lookup[0][3])
+		admin = user_lookup[0][3]
+		if admin:
+			results = sql.get_results_obj(date=date, order="date, name")
+			return render_template('comments.html', results=results, date=date)
+	print('returning a 404')
+	return '',404
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

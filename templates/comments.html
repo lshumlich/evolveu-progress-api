@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+
+<h1>Comments for {{date}}</h1>
+
+<div class="center80">
+<table class="border1" style="width:100%">
+	<tr>
+		<th class="border1" style="width:10%"> </td>
+		<th class="border1" style="width:30%">Going Well</th>
+		<th class="border1" style="width:30%">Issues</th>
+		<th class="border1" style="width:30%">What to try</th>
+	</tr>
+{% for r in results %}
+	<tr>
+		<th class="border1"> {{ r.first_name() }} </th>
+		<td class="border1"> {{ r.going_well }} </td>
+		<td class="border1"> {{ r.issues }} </td>
+		<td class="border1"> {{ r.what_to_try }} </td>
+	</tr>
+{% endfor %}
+</table> 
+</div>
+
+</body>
+</html>

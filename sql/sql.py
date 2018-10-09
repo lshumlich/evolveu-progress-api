@@ -9,7 +9,7 @@ import uuid
 import psycopg2
 from psycopg2 import sql 
 import utils.dates
-
+import things.results
 
 # --- Questions
 
@@ -160,6 +160,43 @@ def get_results():
 	r = select(get_results_string, [])
 	return r
 
+#
+# from now on starting using this generic object friendly
+# function
+#
+
+get_results_obj_string = """
+select date, name, result, going_well, issues, what_to_try
+	from results, users
+	where
+	student = users.id
+"""
+
+def get_results_obj(date=None, student=None, order=None):
+	if date or student:
+		sql_string = ' and '
+	else:
+		sql_string = ''
+
+	if date:
+		sql_string = sql_string + f"date = '{date}' "
+
+	if student:
+		sql_string = sql_string + f'student = {student} '
+
+	if order:
+		order_by = ' order by ' + order
+	else:
+		order_by = ''
+
+	sql_string = get_results_obj_string + sql_string + order_by + ';'
+	# print('----', sql_string)
+	sql_results = select(sql_string, [])
+	res = []
+	for r in sql_results:
+		res.append(things.results.Result(r[0], r[1],r[2],r[3],r[4],r[5]))
+
+	return res
 
 update_result_by_student_date_string = """
 update results
