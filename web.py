@@ -158,19 +158,21 @@ def excel_results(uuid):
 	print('returning a 404')
 	return '',404
 
+@app.route("/comments/<uuid>/")
 @app.route("/comments/<uuid>/<date>/")
-def comments(uuid, date):
+def comments(uuid, date=None):
+	if not date:
+		date = str(utils.dates.my_monday(datetime.datetime.now().date()))
 	user_lookup = sql.get_user_by_uuid(uuid)
-	print(user_lookup)
 	if user_lookup:
 		print('Admin:', user_lookup[0][3])
 		admin = user_lookup[0][3]
 		if admin:
-			results = sql.get_results_obj(date=date, order="date, name")
-			return render_template('comments.html', results=results, date=date)
+			results = sql.get_prev_results_obj(level=2, date=date, order="date, name")
+			questions = sql.get_questions()
+			return render_template('comments.html', results=results, questions=questions, date=date)
 	print('returning a 404')
 	return '',404
-
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

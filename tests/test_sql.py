@@ -88,15 +88,7 @@ class TestSql(unittest.TestCase):
 		self.assertTrue(len(questions) > 1)
 
 	def test_get_results_obj(self):
-		sql.sqlutil.init_users()
-		self.assertEqual(0, sql.sqlutil.init_results())
-
-		result = '{"sql":1,"logic":2}'
-		s = [1001,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
-		sql.sql.insert_results(s)
-
-		s = [1000,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
-		sql.sql.insert_results(s)
+		self.create_test_data1()
 
 		result = sql.sql.get_results_obj()
 		self.assertEqual(2, len(result))
@@ -137,5 +129,57 @@ class TestSql(unittest.TestCase):
 
 		result = sql.sql.get_results_obj(order = "date, name")
 
-	def test_play(self):
-		print('Hello')
+
+	def test_get_question_results(self):
+		self.create_test_data1()
+
+		results = sql.sql.get_results_obj(order = "date")
+		self.assertEqual([{'axis':'logic','value':2},
+						  {'axis':'whatever','value':0}
+						 ], 
+						 results[0].get_question_results([{'code':'logic'},
+														  {'code':'whatever'}]))
+
+		sql.sqlutil.init_questions()
+		questions = sql.sql.get_questions()
+		# Just make sure it runs
+		results[0].get_question_results(questions)
+
+	def test_get_previous_question_results(self):
+		self.create_test_data1()
+		self.create_test_data2()
+		results = sql.sql.get_prev_results_obj(level=0, date="2018-09-10", order = "date")
+		self.assertIsNotNone(results[0].get_prev_result(0))
+		self.assertIsNone(results[0].get_prev_result(1))
+
+		results = sql.sql.get_prev_results_obj(level=1, date="2018-09-10", order = "date")
+		self.assertIsNotNone(results[0].get_prev_result(0))
+		self.assertIsNotNone(results[0].get_prev_result(1))
+		self.assertIsNone(results[0].get_prev_result(2))
+
+		results = sql.sql.get_prev_results_obj(level=2, date="2018-09-10", order = "date")
+		self.assertIsNotNone(results[0].get_prev_result(0))
+		self.assertIsNotNone(results[0].get_prev_result(1))
+		self.assertIsNone(results[0].get_prev_result(2))
+
+	# 	self.assertEqual(0, results[0].get_prev_total(1))
+
+	def create_test_data1(self):
+		sql.sqlutil.init_users()
+		self.assertEqual(0, sql.sqlutil.init_results())
+
+		result = '{"sql":1,"logic":2}'
+		s = [1001,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
+		sql.sql.insert_results(s)
+
+		s = [1000,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		sql.sql.insert_results(s)
+
+	def create_test_data2(self):
+		result = '{"sql":1,"logic":1}'
+		s = [1001,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		sql.sql.insert_results(s)
+
+		result = '{"sql":3,"logic":3}'
+		s = [1000,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
+		sql.sql.insert_results(s)

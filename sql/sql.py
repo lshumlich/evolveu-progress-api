@@ -166,7 +166,7 @@ def get_results():
 #
 
 get_results_obj_string = """
-select date, name, result, going_well, issues, what_to_try
+select date, student, name, result, going_well, issues, what_to_try
 	from results, users
 	where
 	student = users.id
@@ -194,9 +194,26 @@ def get_results_obj(date=None, student=None, order=None):
 	sql_results = select(sql_string, [])
 	res = []
 	for r in sql_results:
-		res.append(things.results.Result(r[0], r[1],r[2],r[3],r[4],r[5]))
+		res.append(things.results.Result(r[0], r[1],r[2],r[3],r[4],r[5],r[6]))
 
 	return res
+
+def get_prev_results_obj(level=0, date=None, student=None, order=None):
+	results = get_results_obj(date=date, student=student, order=order)
+	if level:
+		students = {}
+		for r in results:
+			students[r.student_id] = r
+		search_date = date
+		for i in range(level):
+
+			search_date = str(utils.dates.last_monday(utils.dates.to_date(search_date)))
+			next_results = get_results_obj(date=search_date, student=student, order=order)
+			for n in next_results:
+				if n.student_id in students:
+					students[n.student_id].set_prev_result(i, n)
+		
+	return results
 
 update_result_by_student_date_string = """
 update results

@@ -13,3 +13,14 @@
 	border-spacing: 0px;
     padding: 10px;
 }
+
+.center90 {
+    margin: auto;
+    width: 90%;
+	border-spacing: 0px;
+    padding: 10px;
+}
+
+.center {
+	text-align: center;
+}
