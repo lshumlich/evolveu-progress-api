@@ -77,7 +77,7 @@ def init_questions():
 
 
 def questions():
-	for q in sql.get_questions():
+	for q in sql.sql.get_questions():
 		print('-', q)
 
 # ------ 	Users
@@ -114,7 +114,7 @@ def init_users():
 		conn.close()
 
 	sql.sql.insert_users(1000,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03', True)
-	sql.sql.insert_users(1001,'Lorraine Shumlich', 'lshumlich@gmail.com', '2018-09-03', True)
+	sql.sql.insert_users(1001,'Lorraine Shumlich', 'lshumlich@gmail.com', '2018-09-03', False)
 	print('--Users Inserted: 2')
 
 def get_user_by_uuid():

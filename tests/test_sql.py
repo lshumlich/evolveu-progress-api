@@ -162,7 +162,11 @@ class TestSql(unittest.TestCase):
 		self.assertIsNotNone(results[0].get_prev_result(1))
 		self.assertIsNone(results[0].get_prev_result(2))
 
-	# 	self.assertEqual(0, results[0].get_prev_total(1))
+	def test_get_missing_for_date(self):
+		self.create_test_data1()
+		results = sql.sql.get_missing_for_date("2018-09-11")
+		self.assertEqual(1, len(results))
+		self.assertEqual('Lorraine Shumlich', results[0].name)
 
 	def create_test_data1(self):
 		sql.sqlutil.init_users()

@@ -170,7 +170,8 @@ def comments(uuid, date=None):
 		if admin:
 			results = sql.get_prev_results_obj(level=2, date=date, order="date, name")
 			questions = sql.get_questions()
-			return render_template('comments.html', results=results, questions=questions, date=date)
+			missing = sql.get_missing_for_date(date)
+			return render_template('comments.html', results=results, questions=questions, missing=missing, date=date)
 	print('returning a 404')
 	return '',404
 

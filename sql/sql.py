@@ -11,6 +11,15 @@ from psycopg2 import sql
 import utils.dates
 import things.results
 
+class Struc(object):
+	def __str__(self):
+		return str(self.__dict__)
+
+	def __repr__(self):
+		return self.__str__()
+
+
+
 # --- Questions
 
 drop_questions = """
@@ -214,6 +223,21 @@ def get_prev_results_obj(level=0, date=None, student=None, order=None):
 					students[n.student_id].set_prev_result(i, n)
 		
 	return results
+
+get_missing_for_date_string = """
+select name from users where not admin and users.id not in
+	(select results.student from results where results.date = %s);
+"""
+
+def get_missing_for_date(date):
+	values = []
+	results = select(get_missing_for_date_string,[date])
+	for r in results:
+		struc = Struc()
+		struc.name = r[0]
+		values.append(struc)
+	return values
+
 
 update_result_by_student_date_string = """
 update results

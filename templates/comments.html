@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Progress 7</title>
+	<title>Progress 8</title>
 	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
 	<!-- Google fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
@@ -39,6 +39,18 @@
 
 </head>
 <body>
+
+{% if missing %}
+
+	<h1>Missing for {{date}}</h1>
+
+	{% for m in missing %}
+		<ul>
+			<li> {{ m.name }} </li>
+		</ul>
+	{% endfor %}
+
+{% endif %}
 
 <h1>Comments for {{date}}</h1>
 

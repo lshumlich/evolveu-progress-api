@@ -3,6 +3,7 @@
 # testing
 /coverage
 results*.xlsx
+latest.dump
 
 # misc
 **/__pycache__
