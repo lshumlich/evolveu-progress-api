@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="lineChart.js"> </script>
+<body>
+  
+  <h1>First</h1>
+
+  <h1>Second</h1>
+
+  <h1>Line Chart Here</h1>
+
+    <div id="LineChart">  </div>
+
+  <h1>Third</h1>
+
+</body>
+
+<script>
+
+
+
+// ----------------------------------- Start of Script for Line Chart -------------------------------------------
+
+  // Load the data
+  let learners =
+  [
+    {
+      "name": "Stu 1",
+      "show": true,
+      "currentScore": 33,
+      "history": [
+        {
+          "week": 1,
+          "score": 10
+        },
+        {
+          "week": 2,
+          "score": 20
+        },
+        {
+          "week": 3,
+          "score": 33
+        }
+      ]
+    },
+    {
+      "name": "Stu 2",
+      "show": true,
+      "currentScore": 7,
+      "history": [
+        {
+          "week": 3,
+          "score": 3
+        },
+        {
+          "week": 4,
+          "score": 4
+        },
+        {
+          "week": 5,
+          "score": 5
+        },
+      ]
+    }
+  ]
+
+
+
+DrawLineChart('#LineChart', learners);
+
+
+</script>

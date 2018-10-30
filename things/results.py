@@ -22,7 +22,7 @@ class Result(object):
 	def get_question_results(self, questions):
 		""" 
 		return the results in the same order as the questions. It should
-		be noted that the key is not axis and not code. This is because
+		be noted that the key is 'axis' and not 'code'. This is because
 		for radial graphs (which this is used for) uses axis.
 		"""
 		results = []

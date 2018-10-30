@@ -4,7 +4,7 @@ This is the web component of the technical progress app. To start execute
 start from the bash / terminal: 
 
 ./start
-DATABASE_URL="dbname=larry2 user=larry" ./start
+DATABASE_URL="dbname=larry3 user=larry" ./start
 
 """
 import datetime
@@ -20,6 +20,7 @@ import json
 import sql.sql as sql
 import utils.dates
 import utils.results
+import utils.weekly_report as report
 
 print("--- Starting", __file__)
 
@@ -161,17 +162,24 @@ def excel_results(uuid):
 @app.route("/comments/<uuid>/")
 @app.route("/comments/<uuid>/<date>/")
 def comments(uuid, date=None):
-	if not date:
-		date = str(utils.dates.my_monday(datetime.datetime.now().date()))
+	#
+	# Hard coded today but must be changed
+	#
+	start_date = '2018-09-10'
+
+
 	user_lookup = sql.get_user_by_uuid(uuid)
 	if user_lookup:
 		print('Admin:', user_lookup[0][3])
 		admin = user_lookup[0][3]
 		if admin:
-			results = sql.get_prev_results_obj(level=2, date=date, order="date, name")
-			questions = sql.get_questions()
-			missing = sql.get_missing_for_date(date)
-			return render_template('comments.html', results=results, questions=questions, missing=missing, date=date)
+			report = utils.weekly_report.create_weekly_report(start_date, date)
+			# results = sql.get_prev_results_obj(level=2, date=date, order="date, name")
+			# questions = sql.get_questions()
+			# missing = sql.get_missing_for_date(date)
+			return render_template('comments.html', results=report.results, questions=report.questions, 
+								   missing=report.missing, progress=report.class_progress, 
+								   date=report.report_date, week=report.week_number)
 	print('returning a 404')
 	return '',404
 

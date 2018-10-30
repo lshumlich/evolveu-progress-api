@@ -1,29 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Progress 8</title>
+	<title>Progress</title>
 	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
 	<!-- Google fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
 	<!-- D3.js -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script> -->
+  <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+  <script src="https://d3js.org/d3-path.v1.min.js" charset="utf-8"></script>
 
 	<script>
+
+<!-- Data for radar chart   -->
+
 		{% for r in results %}
 				var {{ r.first_name() }} = 
-				[ 
-					{{ r.get_prev_question_results(0, questions) | safe }} ,
-					{{ r.get_prev_question_results(1, questions) | safe }} ,
-					{{ r.get_prev_question_results(2, questions) | safe }} ,
+        [ 
+          {name:'This Week',
+          axes:
+					 {{ r.get_prev_question_results(0, questions) | safe }} ,
+          },
+          {name:'Last Week',
+          axes:
+					 {{ r.get_prev_question_results(1, questions) | safe }} ,
+          },
+          {name:'2 Week',
+          axes:
+					 {{ r.get_prev_question_results(2, questions) | safe }} ,
+          },
 				]; 
 		{% endfor %}
 
+// Data for Line Chart ------------------------
+    var learners = 
+    [
+      {% for p in progress %}
+      {
+        "name": "{{ p.name }}",
+        "show": true,
+        "currentScore": {{ p.get_last_score() }},
+        "history": {{ p.get_weekly_results() | safe }}
+      },
+      {% endfor %}
+    ]
+
 	</script>
+
 
 	<!-- radarChart.js -->
 	<script src= "{{ url_for('static',filename='radarChart.js') }}"> </script>
+
+  <!-- lineChart.js -->
+  <script src= "{{ url_for('static',filename='lineChart.js') }}"> </script>
 
 	<style>
 		
@@ -52,7 +83,7 @@
 
 {% endif %}
 
-<h1>Comments for {{date}}</h1>
+<h1>Comments for {{date}} week {{week}}</h1>
 
 <div class="center90">
 <table class="border1" style="width:100%">
@@ -73,7 +104,9 @@
 </table> 
 </div>
 
-<h1>Skill Self Assesment for {{date}}</h1>
+<h1>Skill Self Assesment for {{date}} week {{week}}</h1>
+
+<div>
 
 <div class="center90">
 	{% for r in results %}
@@ -83,9 +116,25 @@
 		 </div>
 	{% endfor %}
 </div>
+</div>
+
 <br>
 <br>
 
+<br>
+<div style="clear:both;">
+</div>
+<h1>Class Progress week {{week}}</h1>
+
+  <div id="LineChart">  </div>
+
+<div>
+<h1>v3..</h1>
+</div>
+
+
+</body>
+</html>
 
 
 <script>
@@ -97,7 +146,7 @@
 	////////////////////////////////////////////////////////////// 
 
 	// var margin = {top: 100, right: 100, bottom: 100, left: 100},
-	var margin = {top: 45, right: 55, bottom: 45, left: 55};
+	var radar_margin = {top: 45, right: 55, bottom: 45, left: 55};
 	// var margin = {top: 65, right: 65, bottom: 65, left: 65},
 	// 	width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
 	// 	height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
@@ -122,8 +171,8 @@
 	//////////////////// Draw the Chart ////////////////////////// 
 	////////////////////////////////////////////////////////////// 
 
-	var color = d3.scale.ordinal()
-		.range(["#EDC951","#CC333F","#00A0B0"]);
+	// var color = d3.scale.ordinal()
+	// 	.range(["#EDC951","#CC333F","#00A0B0"]);
 		
 	// var radarChartOptions = {
 	//   w: width,
@@ -137,21 +186,74 @@
 	var radarChartOptions = {
 	  w: 200,
 	  h: 200,
-	  margin: margin,
+	  margin: radar_margin,
 	  maxValue: 5,
 	  levels: 5,
 	  roundStrokes: true,
-	  color: color
+    color: d3.scaleOrdinal().range(["#EDC951", "#CC333F", "#00A0B0"]),
+	  // color: color
 	};
 	//Call function to draw the Radar chart
 	{% for r in results %}
-		RadarChart("#{{ r.first_name() }}", {{ r.first_name() }}, radarChartOptions);
+		// RadarChart("#{{ r.first_name() }}", {{ r.first_name() }}, radarChartOptions);
 		RadarChart("#{{ r.first_name() }}_div", {{ r.first_name() }}, radarChartOptions);
 	{% endfor %}
 	// RadarChart("#radarChart", Amadou, radarChartOptions);
 	// RadarChart("#radarChart2", data, radarChartOptions);
 </script>
 
+<!-- ------------------------------------------------------------------------------------------------ -->
 
-</body>
-</html>
+<script>
+
+// ----------------------------------- Start of Script for Line Chart -------------------------------------------
+
+  // Load the data
+  // let learners =
+  // [
+  //   {
+  //     "name": "Stu 1",
+  //     "show": true,
+  //     "currentScore": 33,
+  //     "history": [
+  //       {
+  //         "week": 1,
+  //         "score": 10
+  //       },
+  //       {
+  //         "week": 2,
+  //         "score": 20
+  //       },
+  //       {
+  //         "week": 3,
+  //         "score": 33
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     "name": "Stu 2",
+  //     "show": true,
+  //     "currentScore": 7,
+  //     "history": [
+  //       {
+  //         "week": 3,
+  //         "score": 3
+  //       },
+  //       {
+  //         "week": 4,
+  //         "score": 4
+  //       },
+  //       {
+  //         "week": 5,
+  //         "score": 5
+  //       },
+  //     ]
+  //   }
+  // ]
+
+
+
+DrawLineChart('#LineChart', learners);
+
+
+</script>

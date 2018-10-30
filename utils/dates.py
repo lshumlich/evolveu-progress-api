@@ -21,3 +21,15 @@ def last_monday(dt):
 
 def to_date(dt):
 	return datetime.datetime.strptime(dt, "%Y-%m-%d").date()
+
+def course_weeks(s, count):
+	if type(s) == str:
+		s = to_date(s)
+
+	result = {}
+	result[str(s)] = 0
+
+	for i in range (1, count + 1):
+		s = next_monday(s)
+		result[str(s)] = i;
+	return result

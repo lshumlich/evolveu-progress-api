@@ -46,3 +46,10 @@ class TestDates(unittest.TestCase):
 	def test_to_date(self):
 		s = '2018-09-03'
 		self.assertEqual(utils.dates.to_date(s), datetime.date(2018,9,3))
+
+	def test_course_weeks(self):
+		s = '2018-09-03'
+		self.assertEqual({'2018-09-03':0, '2018-09-10': 1 },utils.dates.course_weeks(s,1))
+		self.assertEqual({'2018-09-03':0, '2018-09-10': 1 , '2018-09-17': 2, '2018-09-24': 3, 
+						  '2018-10-01': 4, '2018-10-08': 5  },utils.dates.course_weeks(s,5))
+
