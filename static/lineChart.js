@@ -26,7 +26,7 @@ const DrawLineChart = function DrawLineChart(parent_selector, data) {
 
   const userInput = parent.append('div')
     .style('width', width + margin.left + margin.right)
-    .style('height', '14em')
+    .style('height', '10em')
     .style('display', 'flex')
     .style('flex-flow', 'column wrap');  
     
@@ -56,7 +56,7 @@ const DrawLineChart = function DrawLineChart(parent_selector, data) {
     userInput.selectAll('checkboxes')
       .data(learners).enter()
       .append('label')
-      .style('width', '10em')
+      .style('width', '14em')
       .html(d => d.name)
       .append('input')
       .attr('type', 'checkbox')
