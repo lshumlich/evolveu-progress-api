@@ -95,7 +95,6 @@ class TestSql(unittest.TestCase):
 
 		self.assertEqual(3, result[0].total())
 
-
 		result = sql.sql.get_results_obj(date='2017-01-01')
 		self.assertEqual(0, len(result))
 
@@ -117,18 +116,19 @@ class TestSql(unittest.TestCase):
 		self.assertEqual("Lorraine", result[0].first_name())
 
 
-		result = sql.sql.get_results_obj(order = "name")
+		result = sql.sql.get_results_obj(order="name")
 		self.assertEqual(2, len(result))
 		self.assertEqual("Larry Shumlich", result[0].student)
 		self.assertEqual("Lorraine Shumlich", result[1].student)
 
-		result = sql.sql.get_results_obj(order = "date")
+		result = sql.sql.get_results_obj(order="date")
 		self.assertEqual(2, len(result))
 		self.assertEqual(datetime.date(2018, 9, 3), result[0].date)
 		self.assertEqual(datetime.date(2018, 9, 10), result[1].date)
 
-		result = sql.sql.get_results_obj(order = "date, name")
+		result = sql.sql.get_results_obj(order="date, name")
 
+		result = sql.sql.get_results_obj(date='2018-09-10', student=1001)
 
 	def test_get_question_results(self):
 		self.create_test_data1()
@@ -145,7 +145,7 @@ class TestSql(unittest.TestCase):
 		# Just make sure it runs
 		results[0].get_question_results(questions)
 
-	def test_get_previous_question_results(self):
+	def test_get_prev_result(self):
 		self.create_test_data1()
 		self.create_test_data2()
 		results = sql.sql.get_prev_results_obj(level=0, date="2018-09-10", order = "date")
@@ -158,9 +158,14 @@ class TestSql(unittest.TestCase):
 		self.assertIsNone(results[0].get_prev_result(2))
 
 		results = sql.sql.get_prev_results_obj(level=2, date="2018-09-10", order = "date")
+		self.assertEqual(2, len(results))
 		self.assertIsNotNone(results[0].get_prev_result(0))
 		self.assertIsNotNone(results[0].get_prev_result(1))
 		self.assertIsNone(results[0].get_prev_result(2))
+
+		# Only looking for 1 student
+		results = sql.sql.get_prev_results_obj(level=2, date="2018-09-10", order = "date", student=1000)
+		self.assertEqual(1, len(results))
 
 	def test_get_missing_for_date(self):
 		self.create_test_data1()

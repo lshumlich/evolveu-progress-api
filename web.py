@@ -3,6 +3,7 @@
 This is the web component of the technical progress app. To start execute 
 start from the bash / terminal: 
 
+pipenv shell
 ./start
 DATABASE_URL="dbname=larry3 user=larry" ./start
 
@@ -41,7 +42,9 @@ def register(uuid=None):
 @app.route("/questions")
 def questions():
 	return jsonify(sql.get_questions())
-
+#
+# Get results to display
+#
 @app.route("/results/<uuid>/")
 @app.route("/results/<uuid>/<date>")
 def results(uuid=None, date=None):
@@ -50,10 +53,8 @@ def results(uuid=None, date=None):
 	if not user:
 		return '',404
 
-	# print(user)
 	id = user[0][0]
 	start_date = user[0][2]
-	# print (start_date)
 
 	this_monday = utils.dates.my_monday(datetime.datetime.now().date())
 
@@ -86,7 +87,9 @@ def results(uuid=None, date=None):
 					'going_well': going_well,
 					'issues': issues,
 					'what_to_try': what_to_try})
-
+#
+# 
+#
 @app.route("/update", methods = ['POST'])
 def update():
 	content = request.get_json()
@@ -107,16 +110,11 @@ def update():
 		# print('We should update the text:',content['code'], content['date'], content['code'], int(content['value'])
 
 	return jsonify({'status': 'ok'}), 200
-
-
 #
-# 
+#  Add a user to the system
 #
 @app.route("/adduser/<uuid>/")
 def adduser(uuid):
-	# print(request)
-	# print(request.args)
-	print('"'+uuid+'"')
 	id = request.args.get('id')
 	user = request.args.get('user')
 	email = request.args.get('email')
@@ -125,25 +123,22 @@ def adduser(uuid):
 	# sql.insert_users(100,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03')
 
 	user_lookup = sql.get_user_by_uuid(uuid)
-	print(user_lookup)
 	if user_lookup:
-		print('Admin:', user_lookup[0][3])
 		admin = user_lookup[0][3]
 		if admin:
-			print('inserting')
 			sql.insert_users(int(id),user,email,startDate,False)
 
 			return "just playing"
 
 	print('returning a 404')
 	return '',404
-
+#
+# Output Results to a spreadsheet 
+#
 @app.route("/excel_results/<uuid>/")
 def excel_results(uuid):
 	user_lookup = sql.get_user_by_uuid(uuid)
-	print(user_lookup)
 	if user_lookup:
-		print('Admin:', user_lookup[0][3])
 		admin = user_lookup[0][3]
 		if admin:
 			out = io.BytesIO()
@@ -158,29 +153,31 @@ def excel_results(uuid):
 		        as_attachment=True)
 	print('returning a 404')
 	return '',404
-
+#
+# Show student progress: Comments / Skill Self Assements / Class Progress
+#
 @app.route("/comments/<uuid>/")
 @app.route("/comments/<uuid>/<date>/")
-def comments(uuid, date=None):
+@app.route("/comments/<uuid>/<date>/<student>/")
+def comments(uuid, date=None, student=None):
 	#
 	# Hard coded today but must be changed
 	#
 	start_date = '2018-09-10'
-
-
+	#
+	# Makes sure the user is admin
+	#
 	user_lookup = sql.get_user_by_uuid(uuid)
 	if user_lookup:
-		print('Admin:', user_lookup[0][3])
 		admin = user_lookup[0][3]
 		if admin:
-			report = utils.weekly_report.create_weekly_report(start_date, date)
-			# results = sql.get_prev_results_obj(level=2, date=date, order="date, name")
-			# questions = sql.get_questions()
-			# missing = sql.get_missing_for_date(date)
+			report = utils.weekly_report.create_weekly_report(start_date, date, student)
+			scroll = utils.dates.scroll_mondays(start_date, date)
 			return render_template('comments.html', results=report.results, questions=report.questions, 
 								   missing=report.missing, progress=report.class_progress, 
-								   date=report.report_date, week=report.week_number)
-	print('returning a 404')
+								   date=report.report_date, week=report.week_number,
+								   uuid=uuid, scroll=scroll, student=report.student)
+
 	return '',404
 
 if __name__ == '__main__':

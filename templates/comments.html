@@ -71,7 +71,32 @@
 </head>
 <body>
 
-{% if missing %}
+<div>
+	<div style="float: right">
+
+		{% if scroll.prev_monday %}
+			{% if student %}
+				<a href="/comments/{{uuid}}/{{scroll.prev_monday}}/{{student}}/">{{scroll.prev_monday}}</a>
+			{% else %}
+				<a href="/comments/{{uuid}}/{{scroll.prev_monday}}/">{{scroll.prev_monday}}</a>
+			{% endif %}
+		{% endif %}
+
+		{{scroll.display_monday}}
+
+		{% if scroll.next_monday %}
+			{% if student %}
+				<a href="/comments/{{uuid}}/{{scroll.next_monday}}/{{student}}/">{{scroll.next_monday}}</a>
+			{% else %}
+				<a href="/comments/{{uuid}}/{{scroll.next_monday}}/">{{scroll.next_monday}}</a>
+			{% endif %}
+		{% endif %}
+		
+	</div>
+</div>
+<div style="clear:both;"> </div>
+
+{% if missing and not student %}
 
 	<h1>Missing for {{date}}</h1>
 
@@ -95,7 +120,9 @@
 	</tr>
 {% for r in results %}
 	<tr>
-		<th class="border1"> {{ r.first_name() }} </th>
+		<th class="border1"> 
+			<a href="/comments/{{uuid}}/{{scroll.display_monday}}/{{r.student_id}}/">{{r.first_name()}}</a>
+		</th>
 		<td class="border1"> {{ r.going_well }} </td>
 		<td class="border1"> {{ r.issues }} </td>
 		<td class="border1"> {{ r.what_to_try }} </td>
@@ -127,10 +154,6 @@
 <h1>Class Progress week {{week}}</h1>
 
   <div id="LineChart">  </div>
-
-<div>
-<h1>v3..</h1>
-</div>
 
 
 </body>

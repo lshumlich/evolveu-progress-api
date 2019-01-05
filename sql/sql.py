@@ -10,15 +10,7 @@ import psycopg2
 from psycopg2 import sql 
 import utils.dates
 import things.results
-
-class Struc(object):
-	def __str__(self):
-		return str(self.__dict__)
-
-	def __repr__(self):
-		return self.__str__()
-
-
+from things.struc import Struc 
 
 # --- Questions
 
@@ -188,10 +180,13 @@ def get_results_obj(date=None, student=None, order=None):
 		sql_string = ''
 
 	if date:
-		sql_string = sql_string + f"date = '{date}' "
+		sql_string += f"date = '{date}' "
+
+	if date and student:
+		sql_string += ' and '
 
 	if student:
-		sql_string = sql_string + f'student = {student} '
+		sql_string += f'student = {student} '
 
 	if order:
 		order_by = ' order by ' + order
