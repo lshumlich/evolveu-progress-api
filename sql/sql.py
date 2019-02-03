@@ -10,6 +10,7 @@ import psycopg2
 from psycopg2 import sql 
 import utils.dates
 import things.results
+import things.user
 from things.struc import Struc 
 
 # --- Questions
@@ -40,7 +41,7 @@ create_users = """
 Create table users (
 	id integer not null unique primary key,
 	name varChar(50) not null,
-	email varChar(50) not null,
+	email varChar(50) not null unique,
 	uuid varChar(36) not null,
 	start_date date not null,
 	admin boolean not null
@@ -63,12 +64,6 @@ Create table results (
 	issues text,
 	what_to_try text
 );
-"""
-
-insert_results_string = """
-insert into 
-	results (student, date, result, going_well, issues, what_to_try) 
-	values  (%s, %s, %s, %s, %s, %s) returning id;
 """
 
 default_connect = """
@@ -104,19 +99,44 @@ def insert_users(id, name, email, start_date, admin):
 	return sql_util(insert_users_string, [id, name, email, start_date, admin, str(uuid.uuid4())])
 
 get_users_string = """
-select id, name, email, start_date, admin, uuid from users;
+select id, name, email, uuid, start_date, admin from users;
 """
 
 def get_users():
-	return select(get_users_string,None)
+	sql_results = select(get_users_string,None)
+	res = []
+	for r in sql_results:
+		res.append(things.user.User(r[0], r[1],r[2],r[3],r[4],r[5]))
 
+	return res
 
 select_user_by_ggid = """
-select id, name, start_date, admin from users where uuid = %s;
+select id, name, email, uuid, start_date, admin from users where uuid = %s;
 """
 
 def get_user_by_uuid(ggid):
-	return select(select_user_by_ggid,[ggid])
+	sql_results = select(select_user_by_ggid,[ggid])
+	if sql_results:
+		r = sql_results[0]
+		return things.user.User(r[0], r[1],r[2],r[3],r[4],r[5])
+	return None
+
+select_user_by_email = """
+select id, name, email, uuid, start_date, admin from users where email = %s;
+"""
+
+def get_user_by_email(email):
+	sql_results = select(select_user_by_email,[email])
+	if sql_results:
+		r = sql_results[0]
+		return things.user.User(r[0], r[1],r[2],r[3],r[4],r[5])
+	return None
+
+insert_results_string = """
+insert into 
+	results (student, date, result, going_well, issues, what_to_try) 
+	values  (%s, %s, %s, %s, %s, %s) returning id;
+"""
 
 def insert_results(data):
 	return sql_util(insert_results_string, data)
@@ -125,7 +145,6 @@ get_results_by_student_date_string = """
 select result, going_well, issues, what_to_try
 	from results
 	where student = %s and date = %s;
-
 """
 
 def get_results_by_student_date(student, date):

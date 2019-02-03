@@ -82,6 +82,26 @@ class TestSql(unittest.TestCase):
 		users = sql.sql.get_users()
 		self.assertEqual(2, len(users))
 
+		print('The users are:', users)
+
+		uuid = users[0].uuid
+		email = users[0].email
+
+		user = sql.sql.get_user_by_email("bad")
+		self.assertIsNone(user)
+
+		user = sql.sql.get_user_by_email(email)
+		self.assertEqual(user.uuid, uuid)
+		self.assertEqual(user.email, email)
+
+		user = sql.sql.get_user_by_uuid('bad')
+		self.assertIsNone(user)
+
+		user = sql.sql.get_user_by_uuid(uuid)
+		self.assertEqual(user.uuid, uuid)
+		self.assertEqual(user.email, email)
+
+
 	def test_questions(self):
 		sql.sqlutil.init_questions()
 		questions = sql.sql.get_questions()

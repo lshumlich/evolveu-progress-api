@@ -15,15 +15,19 @@ from flask import jsonify
 from flask import request
 from flask import render_template
 from flask_cors import CORS
-# from openpxl import Workbook
 import psycopg2
 import json
+
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
 import sql.sql as sql
 import utils.dates
 import utils.results
 import utils.weekly_report as report
 
 print("--- Starting", __file__)
+CLIENT_ID = "225894951024-d2b5jugscfmfsp8fr6vd5mqhfl5si3uq.apps.googleusercontent.com"
 
 app = Flask(__name__)
 CORS(app)
@@ -32,11 +36,31 @@ CORS(app)
 def hello():
 	return "Hello World! from EvolveU Evaluation"
 
+
+@app.route("/gsignon", methods = ['POST'])
+def google_signon():
+	content = request.get_json()
+	# print(content)
+
+	try:
+		idinfo = id_token.verify_oauth2_token(content['idtoken'], requests.Request(), CLIENT_ID)
+		print(idinfo)
+		print('--email--', idinfo['email'])
+		user = sql.get_user_by_email(idinfo['email'])
+		if user:
+			return jsonify({'id':user.id,'name':user.name,'uuid':user.uuid}), 200
+
+	except ValueError:
+		print('**** Not a valid request ***')
+
+	return jsonify('{}'), 404
+
+
 @app.route("/register/<uuid>")
 def register(uuid=None):
 	user = sql.get_user_by_uuid(uuid)
 	if user:
-		return jsonify({'id':user[0][0],'name':user[0][1]}), 200
+		return jsonify({'id':user.id,'name':user.name}), 200
 	return jsonify('{}'), 404
 
 @app.route("/questions")
@@ -53,8 +77,8 @@ def results(uuid=None, date=None):
 	if not user:
 		return '',404
 
-	id = user[0][0]
-	start_date = user[0][2]
+	id = user.id
+	start_date = user.start_date
 
 	this_monday = utils.dates.my_monday(datetime.datetime.now().date())
 
@@ -93,12 +117,12 @@ def results(uuid=None, date=None):
 @app.route("/update", methods = ['POST'])
 def update():
 	content = request.get_json()
-	# print(content)
+	# print('--- content ---', content)
 
 	user = sql.get_user_by_uuid(content['uuid'])
 	if not user:
 		return '',404
-	id = user[0][0]
+	id = user.id
 
 	row = sql.get_results_by_student_date(id, content['date'])
 
@@ -122,15 +146,12 @@ def adduser(uuid):
 
 	# sql.insert_users(100,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03')
 
-	user_lookup = sql.get_user_by_uuid(uuid)
-	if user_lookup:
-		admin = user_lookup[0][3]
-		if admin:
+	admin_user = sql.get_user_by_uuid(uuid)
+	if admin_user:
+		if admin_user.admin:
 			sql.insert_users(int(id),user,email,startDate,False)
-
 			return "just playing"
 
-	print('returning a 404')
 	return '',404
 #
 # Output Results to a spreadsheet 
@@ -139,8 +160,7 @@ def adduser(uuid):
 def excel_results(uuid):
 	user_lookup = sql.get_user_by_uuid(uuid)
 	if user_lookup:
-		admin = user_lookup[0][3]
-		if admin:
+		if user_lookup.admin:
 			out = io.BytesIO()
 			wb = utils.results.get_results()
 			wb.save(out)
@@ -151,7 +171,6 @@ def excel_results(uuid):
 				mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 		        attachment_filename='results.xlsx', 
 		        as_attachment=True)
-	print('returning a 404')
 	return '',404
 #
 # Show student progress: Comments / Skill Self Assements / Class Progress
@@ -169,8 +188,7 @@ def comments(uuid, date=None, student=None):
 	#
 	user_lookup = sql.get_user_by_uuid(uuid)
 	if user_lookup:
-		admin = user_lookup[0][3]
-		if admin:
+		if user_lookup.admin:
 			report = utils.weekly_report.create_weekly_report(start_date, date, student)
 			scroll = utils.dates.scroll_mondays(start_date, date)
 			return render_template('comments.html', results=report.results, questions=report.questions, 

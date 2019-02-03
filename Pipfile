@@ -9,6 +9,11 @@ gunicorn = "*"
 Flask = "*"
 Flask-Cors = "*"
 openpyxl = "*"
+google-auth = "*"
+requests = "*"
+pytest = "*"
+pytest-cov = "*"
+coverage = "*"
 
 [dev-packages]
 
