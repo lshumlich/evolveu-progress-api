@@ -126,11 +126,11 @@ class TestSql(unittest.TestCase):
 		self.assertEqual(1, len(result))
 		self.assertEqual(datetime.date(2018, 9, 10), result[0].date)
 
-		result = sql.sql.get_results_obj(student=1000)
+		result = sql.sql.get_results_obj(student=1)
 		self.assertEqual(1, len(result))
 		self.assertEqual("Larry Shumlich", result[0].student)
 
-		result = sql.sql.get_results_obj(student=1001)
+		result = sql.sql.get_results_obj(student=2)
 		self.assertEqual(1, len(result))
 		self.assertEqual("Lorraine Shumlich", result[0].student)
 		self.assertEqual("Lorraine", result[0].first_name())
@@ -184,7 +184,7 @@ class TestSql(unittest.TestCase):
 		self.assertIsNone(results[0].get_prev_result(2))
 
 		# Only looking for 1 student
-		results = sql.sql.get_prev_results_obj(level=2, date="2018-09-10", order = "date", student=1000)
+		results = sql.sql.get_prev_results_obj(level=2, date="2018-09-10", order = "date", student=1)
 		self.assertEqual(1, len(results))
 
 	def test_get_missing_for_date(self):
@@ -198,17 +198,17 @@ class TestSql(unittest.TestCase):
 		self.assertEqual(0, sql.sqlutil.init_results())
 
 		result = '{"sql":1,"logic":2}'
-		s = [1001,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
+		s = [2,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
 		sql.sql.insert_results(s)
 
-		s = [1000,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
 		sql.sql.insert_results(s)
 
 	def create_test_data2(self):
 		result = '{"sql":1,"logic":1}'
-		s = [1001,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		s = [2,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
 		sql.sql.insert_results(s)
 
 		result = '{"sql":3,"logic":3}'
-		s = [1000,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
+		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
 		sql.sql.insert_results(s)

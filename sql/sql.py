@@ -39,11 +39,11 @@ Drop table users;
 
 create_users = """
 Create table users (
-	id integer not null unique primary key,
+	id serial not null primary key,
 	name varChar(50) not null,
 	email varChar(50) not null unique,
 	uuid varChar(36) not null,
-	start_date date not null,
+	start_date date,
 	admin boolean not null
 );
 """
@@ -56,7 +56,7 @@ Drop table results;
 
 create_results = """
 Create table results (
-	Id serial not null primary key,
+	id serial not null primary key,
 	student integer not null,
 	date date not null,
 	result text not null,
@@ -89,14 +89,14 @@ def get_questions():
 # f8862239-ec71-43b9-b9a9-5cf918040f08 (Sample of a uuid)
 
 insert_users_string = """
-insert into users (id, name, email, start_date, admin, uuid) values(%s, %s, %s, %s, %s, %s)
+insert into users (name, email, start_date, admin, uuid) values(%s, %s, %s, %s, %s)
 """
 
-def insert_users(id, name, email, start_date, admin):
+def insert_users(name, email, start_date, admin):
 	""" 
 	Insert a single user into the users table.
 	"""
-	return sql_util(insert_users_string, [id, name, email, start_date, admin, str(uuid.uuid4())])
+	return sql_util(insert_users_string, [name, email, start_date, admin, str(uuid.uuid4())])
 
 get_users_string = """
 select id, name, email, uuid, start_date, admin from users;

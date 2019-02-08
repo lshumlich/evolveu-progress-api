@@ -46,7 +46,7 @@ def init_questions():
 	data is stored based on the code.
 	"""
 	try:
-		print("-- Init Questions --");
+		# print("-- Init Questions --");
 		conn = psycopg2.connect(sql.sql.get_connect_string(), sslmode='require')
 		cur = conn.cursor()
 		try:
@@ -60,7 +60,7 @@ def init_questions():
 		for q in questions:
 			res = cur.execute(sql.sql.insert_questions, q)
 			count += 1
-		print('--Questions Inserted:',count)
+		# print('--Questions Inserted:',count)
 
 		conn.commit()
 	except psycopg2.IntegrityError:
@@ -89,7 +89,7 @@ def init_users():
 	is just used for security reasons.
 	"""
 	try:
-		print("-- Init Users --");
+		# print("-- Init Users --");
 		conn = psycopg2.connect(sql.sql.get_connect_string(), sslmode='require')
 		cur = conn.cursor()
 		try:
@@ -113,9 +113,9 @@ def init_users():
 		cur.close()
 		conn.close()
 
-	sql.sql.insert_users(1000,'Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03', True)
-	sql.sql.insert_users(1001,'Lorraine Shumlich', 'lmshumlich@gmail.com', '2018-09-03', False)
-	print('--Users Inserted: 2')
+	sql.sql.insert_users('Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03', True)
+	sql.sql.insert_users('Lorraine Shumlich', 'lmshumlich@gmail.com', '2018-09-03', False)
+	# print('--Users Inserted: 2')
 
 def get_user_by_uuid():
 	if len(sys.argv) < 2:
@@ -132,7 +132,7 @@ def init_results():
 	Create a results table.
 	"""
 	try:
-		print("-- Init Results --");
+		# print("-- Init Results --");
 		conn = psycopg2.connect(sql.sql.get_connect_string(), sslmode='require')
 		cur = conn.cursor()
 		try:
