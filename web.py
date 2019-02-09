@@ -39,12 +39,13 @@ def hello():
 	# print("Session for this dude:", s)
 	return "Hello World! from EvolveU Evaluation."
 
-@app.route("/who")
+@app.route("/who") 
 def who():
 	# session["lfs"] = "Larry"
 	# s = escape(str(session))
 	# print("Session for this dude:", s)
-	return "Values: %s" % valid_email.values()
+	print(id(valid_email))
+	return f"Values: {valid_email.values()} id: {id(valid_email)}"
 
 @app.route("/gsignon", methods = ['POST'])
 def google_signon():
