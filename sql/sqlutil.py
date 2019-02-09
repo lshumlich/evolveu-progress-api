@@ -125,6 +125,36 @@ def get_user_by_uuid():
 
 	# print("just Playing", sys.argv)
 
+# ------ 	Users
+
+def init_session():
+	""" 
+	Delete the table (if it exists) and create a new session table.
+	"""
+	try:
+		# print("-- Init Session --");
+		conn = psycopg2.connect(sql.sql.get_connect_string(), sslmode='require')
+		cur = conn.cursor()
+		try:
+			res = cur.execute(sql.sql.drop_session)
+		except:
+			print('Delete failed',sys.exc_info()[1])
+			conn.rollback()
+
+		res = cur.execute(sql.sql.create_session)
+
+		conn.commit()
+	except psycopg2.IntegrityError:
+		print('--1--',sys.exc_info()[1])
+		raise
+	except:
+		print('***We had a problem Huston...', sys.exc_info())
+		traceback.print_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+		raise
+	finally:
+		cur.close()
+		conn.close()
+
 # ------ 	Results
 
 def init_results():
@@ -183,6 +213,7 @@ Pass one of the following options:
 init-users          : drop and create the users table and add one user
 init-results        : drop and create the results table
 init-questions      : drop and create the questions table and load questions
+init-session		: drop and create the session table
 ---
 questions           : will show the current questions loaded in teh database
 get-user-by-uuid    : get a user based on uuid
@@ -194,6 +225,7 @@ options = {
 	"init-users" : init_users,
 	"init-results" : init_results,
 	"init-questions" : init_questions,
+	"init-session" : init_session,
 	"questions" : questions,
 	"get-user-by-uuid" : get_user_by_uuid,
 	"connect" : connect,

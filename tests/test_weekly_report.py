@@ -18,13 +18,13 @@ class TestWeeklyReport(unittest.TestCase):
 		sql.sqlutil.init_users()
 		self.assertEqual(0, sql.sqlutil.init_results())
 
-		result = '{"sql":1,"logic":2}'
+		result = '{"SQL":1,"JS Logic":2}'
 		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
 		sql.sql.insert_results(s)
-		result = '{"sql":1,"logic":3}'
+		result = '{"SQL":1,"JS Logic":3}'
 		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
 		sql.sql.insert_results(s)
-		result = '{"sql":1,"logic":4}'
+		result = '{"SQL":1,"JS Logic":4}'
 		s = [1,'2018-09-17',result,'all is well', 'no issues', 'try harder next week']
 		sql.sql.insert_results(s)
 
@@ -33,18 +33,21 @@ class TestWeeklyReport(unittest.TestCase):
 		self.assertEqual(1, len(report.results))
 		self.assertEqual(1, len(report.missing))
 
+		# based on the number of ratings
 		self.assertEqual('Target',report.class_progress[0].name)
-		self.assertEqual([0,7,14], report.class_progress[0].weekly)
+		self.assertEqual([0,8,17], report.class_progress[0].weekly)
 
 		self.assertEqual('Larry Shumlich',report.class_progress[1].name)
 		self.assertEqual([3,4,5], report.class_progress[1].weekly)
 
-		self.assertEqual([{'week':0, 'score':0},{'week':1, 'score':7},{'week':2, 'score':14}],
+		# based on the number of ratings
+		self.assertEqual([{'week':0, 'score':0},{'week':1, 'score':8},{'week':2, 'score':17}],
 						report.class_progress[0].get_weekly_results())
 		self.assertEqual([{'week':0, 'score':3},{'week':1, 'score':4},{'week':2, 'score':5}],
 						report.class_progress[1].get_weekly_results())
 
-		self.assertEqual(14,
+		# based on the number of ratings
+		self.assertEqual(17,
 						report.class_progress[0].get_last_score())
 		self.assertEqual(5,
 						report.class_progress[1].get_last_score())

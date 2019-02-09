@@ -11,6 +11,7 @@ from psycopg2 import sql
 import utils.dates
 import things.results
 import things.user
+import things.session
 from things.struc import Struc 
 
 # --- Questions
@@ -66,6 +67,20 @@ Create table results (
 );
 """
 
+# --- Session
+
+drop_session = """
+Drop table session;
+"""
+
+create_session = """
+Create table session (
+	id varchar not null primary key,
+	email varChar(50) not null unique,
+	date date not null
+);
+"""
+
 default_connect = """
 dbname=larry user=larry
 """
@@ -73,6 +88,47 @@ dbname=larry user=larry
 def get_connect_string():
 	return os.environ.get('DATABASE_URL', default_connect)
 
+select_session = """
+select id, email, date from session where id = %s;
+"""
+
+def get_session(id):
+	sql_results = select(select_session,[id])
+	if sql_results:
+		r = sql_results[0]
+		return things.session.Session(r[0], r[1],r[2])
+	return None
+
+insert_session_string = """
+insert into session (id, email, date) values(%s, %s, %s)
+"""
+
+def insert_session(id, email):
+	""" 
+	Insert a session user into the session table.
+	"""
+	dt = str(datetime.date.today())
+	return sql_util(insert_session_string, [id, email, dt])
+
+delete_session_string = """
+delete from session where id = %s
+"""
+
+def delete_session(id):
+	""" 
+	delete a session from the session table.
+	"""
+	sql_util(delete_session_string, [id])
+
+delete_all_sessions_string = """
+delete from session
+"""
+
+def delete_all_sessions():
+	""" 
+	delete all sessions from the session table.
+	"""
+	sql_util(delete_all_sessions_string, [])
 
 select_questions = """
 select code,question from questions order by seq;

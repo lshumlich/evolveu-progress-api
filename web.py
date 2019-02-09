@@ -110,7 +110,7 @@ def signout_user():
 	except KeyError:
 		print('**** Not a valid user but we do not care ***')
 
-	return "", 200
+	return jsonify('{}'), 200
 
 # 
 # register a new user to the system. The user must have
@@ -286,26 +286,33 @@ def comments(uuid, date=None, student=None):
 # Utilities not to be directly attached to routes for security reasons
 # 
 
-valid_email = {}
+# valid_email = {}
 id_key = "user_token"
 
 def set_email(obj, email):
-	valid_email[obj[id_key]] = email
+	sql.insert_session(obj[id_key], email)
+	# valid_email[obj[id_key]] = email
 
 def get_email(obj):
-	return valid_email[obj[id_key]]
+	r = sql.get_session(obj[id_key])
+	if r:
+		return r.email
+	else:
+		raise KeyError("Not a valid request")
+	# return valid_email[obj[id_key]]
 
 def clear_email(obj):
-	return valid_email.pop(obj[id_key], None)
+	sql.delete_session(obj[id_key])
+	# return valid_email.pop(obj[id_key], None)
 
-def clear_sessions():
-	valid_email = {}
+# def clear_sessions():
+# 	valid_email = {}
 
 #
 # must be in the session and in the user table
 #
 def get_user(obj):
-	email = valid_email[obj[id_key]]
+	email = get_email(obj)
 	user = sql.get_user_by_email(email)
 	if not user:
 		raise KeyError("user not found in users table")
