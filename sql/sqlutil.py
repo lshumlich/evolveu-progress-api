@@ -180,9 +180,9 @@ def usage():
 	print("""
 Pass one of the following options:
 
-init-users          : will initialize the users database and add one user
+init-users          : drop and create the users table and add one user
 init-results        : drop and create the results table
-reload-questions    : will reload the questions database
+init-questions      : drop and create the questions table and load questions
 ---
 questions           : will show the current questions loaded in teh database
 get-user-by-uuid    : get a user based on uuid
@@ -191,11 +191,11 @@ test                : just some play stuff
 """)
 
 options = {
-	"reload-questions" : init_questions,
-	"questions" : questions,
 	"init-users" : init_users,
-	"get-user-by-uuid" : get_user_by_uuid,
 	"init-results" : init_results,
+	"init-questions" : init_questions,
+	"questions" : questions,
+	"get-user-by-uuid" : get_user_by_uuid,
 	"connect" : connect,
 	"test" : test,
 	"usage" : usage,
