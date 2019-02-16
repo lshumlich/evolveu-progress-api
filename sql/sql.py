@@ -76,7 +76,7 @@ Drop table session;
 create_session = """
 Create table session (
 	id varchar not null primary key,
-	email varChar(50) not null unique,
+	email varChar(50) not null,
 	date date not null
 );
 """

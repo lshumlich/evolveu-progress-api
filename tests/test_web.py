@@ -54,6 +54,14 @@ def test_session(client):
 		web.get_email(obj)
 
 	web.clear_email(obj) # allow clearing a session that does not exist
+
+	# The same user could be using different browsers
+	
+	obj[web.id_key] = "1234"
+	web.set_email(obj, "lshumlich@gmail.com")
+
+	obj[web.id_key] = "1235"
+	web.set_email(obj, "lshumlich@gmail.com")
 #
 # Test that the user has signed on through auth0 and that it
 # is a valid user in the system.
