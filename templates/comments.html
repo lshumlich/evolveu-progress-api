@@ -4,7 +4,7 @@
 	<title>Progress</title>
 	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
 	<!-- Google fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
 	<!-- D3.js -->
@@ -17,7 +17,7 @@
 <!-- Data for radar chart   -->
 
 		{% for r in results %}
-				var {{ r.first_name() }} = 
+				var {{ r.field_name() }} = 
         [ 
           {name:'This Week',
           axes:
@@ -139,7 +139,7 @@
 	{% for r in results %}
 		<div class="border1" style="float:left;">
 			<div class="center"> <b>{{ r.first_name() }} {{ r.get_prev_total(2) }} {{ r.get_prev_total(1) }} {{ r.get_prev_total(0) }}</b>  </div>
-			<div id="{{ r.first_name() }}_div"> </div>
+			<div id="{{ r.field_name() }}_div"> </div>
 		 </div>
 	{% endfor %}
 </div>
@@ -218,8 +218,8 @@
 	};
 	//Call function to draw the Radar chart
 	{% for r in results %}
-		// RadarChart("#{{ r.first_name() }}", {{ r.first_name() }}, radarChartOptions);
-		RadarChart("#{{ r.first_name() }}_div", {{ r.first_name() }}, radarChartOptions);
+		// RadarChart("#{{ r.field_name() }}", {{ r.field_name() }}, radarChartOptions);
+		RadarChart("#{{ r.field_name() }}_div", {{ r.field_name() }}, radarChartOptions);
 	{% endfor %}
 	// RadarChart("#radarChart", Amadou, radarChartOptions);
 	// RadarChart("#radarChart2", data, radarChartOptions);

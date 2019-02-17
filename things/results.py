@@ -1,8 +1,9 @@
 
 import json
+import things.struc
 
 
-class Result(object):
+class Result(things.struc.Struc):
 	def __init__(self, date, student_id, student, results, going_well, issues, what_to_try):
 		self.date = date
 		self.student_id = student_id
@@ -33,6 +34,9 @@ class Result(object):
 
 	def first_name(self):
 		return self.student.split()[0]
+
+	def field_name(self):
+		return f'{self.first_name()}_{self.student_id}'
 
 	def total(self):
 		sum = 0
@@ -65,7 +69,7 @@ class Result(object):
 		return result
 
 	def __str__(self):
-		return f'Result=student: {self.student}, date: {self.date}, result: {self.results_val}, going_well: {self.going_well}, issues: {self.issues}, what_to_try: {self.what_to_try}'
+		return f'Result=student: {self.student_id} {self.student}, date: {self.date}, result: {self.results_val}, going_well: {self.going_well}, issues: {self.issues}, what_to_try: {self.what_to_try}'
 
 	def __repr__(self):
 		return self.__str__()

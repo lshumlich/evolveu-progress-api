@@ -3,11 +3,12 @@ import datetime
 import utils.dates
 import sql.sql
 import sql.sqlutil
+import things.struc
 
-class WeeklyReport (object):
+class WeeklyReport (things.struc.Struc):
 	None
 
-class Progress (object):
+class Progress (things.struc.Struc):
 	def __init__(self):
 		self.weekly = []
 

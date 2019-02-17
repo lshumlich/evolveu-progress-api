@@ -36,6 +36,10 @@ class TestResults(unittest.TestCase):
 										{'Logic':5,'Basic DS':5},
 										'going well', 'real issues', 'try new stuff')
 
+		self.assertEqual('Larry Shumlich', result_09_03.student);
+		self.assertEqual('Larry', result_09_03.first_name());
+		self.assertEqual('Larry_1000', result_09_03.field_name());
+
 		self.assertEqual('2018-09-03', result_09_03.get_prev_result(0).date)
 		self.assertIsNone(result_09_03.get_prev_result(1))
 

@@ -33,6 +33,8 @@ class TestWeeklyReport(unittest.TestCase):
 		self.assertEqual(1, len(report.results))
 		self.assertEqual(1, len(report.missing))
 
+		# print("one person:", report.class_progress[1])
+		# print("one person:", report.results[0])
 		# based on the number of ratings
 		self.assertEqual('Target',report.class_progress[0].name)
 		self.assertEqual([0,8,17], report.class_progress[0].weekly)
