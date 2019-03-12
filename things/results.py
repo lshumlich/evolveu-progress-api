@@ -4,7 +4,7 @@ import things.struc
 
 
 class Result(things.struc.Struc):
-	def __init__(self, date, student_id, student, results, going_well, issues, what_to_try):
+	def __init__(self, date, student_id, student, results, going_well, issues, what_to_try, exercise):
 		self.date = date
 		self.student_id = student_id
 		self.student = student
@@ -12,6 +12,7 @@ class Result(things.struc.Struc):
 		self.going_well = going_well
 		self.issues = issues
 		self.what_to_try = what_to_try
+		self.exercise = exercise
 		self.prev_result_val = None
 
 	def set_results(self, results_val):

@@ -22,19 +22,19 @@ class TestResults(unittest.TestCase):
 		# def __init__(self, date, student_id, student, result, going_well, issues, what_to_try):
 		result_09_03 = things.results.Result('2018-09-03', 1000, 'Larry Shumlich', 
 										{'Logic':0,'Basic DS':1},
-										'going well', 'real issues', 'try new stuff')
+										'going well', 'real issues', 'try new stuff', '100')
 		result_08_27 = things.results.Result('2018-08-27', 1000, 'Larry Shumlich', 
 										{'Logic':2,'Basic DS':0},
-										'going well', 'real issues', 'try new stuff')
+										'going well', 'real issues', 'try new stuff', '100')
 		result_08_20 = things.results.Result('2018-08-20', 1000, 'Larry Shumlich', 
 										{'Logic':0,'Basic DS':3},
-										'going well', 'real issues', 'try new stuff')
+										'going well', 'real issues', 'try new stuff', '100')
 		result_08_13 = things.results.Result('2018-08-13', 1000, 'Larry Shumlich', 
 										{'Logic':4,'Basic DS':0},
-										'going well', 'real issues', 'try new stuff')
+										'going well', 'real issues', 'try new stuff', '100')
 		result_08_06 = things.results.Result('2018-08-06', 1000, 'Larry Shumlich', 
 										{'Logic':5,'Basic DS':5},
-										'going well', 'real issues', 'try new stuff')
+										'going well', 'real issues', 'try new stuff', '100')
 
 		self.assertEqual('Larry Shumlich', result_09_03.student);
 		self.assertEqual('Larry', result_09_03.first_name());

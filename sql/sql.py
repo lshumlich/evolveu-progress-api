@@ -63,7 +63,8 @@ Create table results (
 	result text not null,
 	going_well text,
 	issues text,
-	what_to_try text
+	what_to_try text,
+	exercise text
 );
 """
 
@@ -190,15 +191,15 @@ def get_user_by_email(email):
 
 insert_results_string = """
 insert into 
-	results (student, date, result, going_well, issues, what_to_try) 
-	values  (%s, %s, %s, %s, %s, %s) returning id;
+	results (student, date, result, going_well, issues, what_to_try, exercise) 
+	values  (%s, %s, %s, %s, %s, %s, %s) returning id;
 """
 
 def insert_results(data):
 	return sql_util(insert_results_string, data)
 
 get_results_by_student_date_string = """
-select result, going_well, issues, what_to_try
+select result, going_well, issues, what_to_try, exercise
 	from results
 	where student = %s and date = %s;
 """
@@ -211,17 +212,17 @@ def get_results_by_student_date(student, date):
 	last_monday = utils.dates.last_monday(utils.dates.to_date(date))
 	r = select(get_results_by_student_date_string, [student, str(last_monday)])
 	if r:
-		new_r = [r[0][0], '', '', '']
+		new_r = [r[0][0], '', '', '', '']
 		insert_results([student, date] + new_r)
 		return [new_r]
-	# insert a empty one
-	new_r = ['{}', '', '', '']
+	# insert an empty one
+	new_r = ['{}', '', '', '', '']
 	insert_results([student, date] + new_r)
 	return [new_r]
 
 def get_result_object_by_student_date(student_id, date):
 	result = get_results_by_student_date(student_id, date)
-	return json.loads(result[0][0]),result[0][1],result[0][2],result[0][3]
+	return json.loads(result[0][0]),result[0][1],result[0][2],result[0][3],result[0][4]
 
 
 get_results_string = """
@@ -237,12 +238,12 @@ def get_results():
 	return r
 
 #
-# from now on starting using this generic object friendly
+# from now on start using this generic object friendly
 # function
 #
 
 get_results_obj_string = """
-select date, student, name, result, going_well, issues, what_to_try
+select date, student, name, result, going_well, issues, what_to_try, exercise
 	from results, users
 	where
 	student = users.id
@@ -273,7 +274,8 @@ def get_results_obj(date=None, student=None, order=None):
 	sql_results = select(sql_string, [])
 	res = []
 	for r in sql_results:
-		res.append(things.results.Result(r[0], r[1],r[2],r[3],r[4],r[5],r[6]))
+		print('rrrr', r)
+		res.append(things.results.Result(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7]))
 
 	return res
 

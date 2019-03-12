@@ -22,7 +22,7 @@ class TestSql(unittest.TestCase):
 		self.assertEqual(0, sql.sqlutil.init_results())
 
 		result = '{"sql":1,"logic":2}'
-		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)
 
 		r = sql.sql.get_results_by_student_date(1, '2018-09-03')
@@ -53,13 +53,16 @@ class TestSql(unittest.TestCase):
 		going_well = 'Everything just everything'
 		issues = 'We have sooo many issues'
 		what_to_try = 'Lets try it all'
+		exercise = '100'
 		sql.sql.update_result_text_student_date(1, '2018-09-03', 'going_well', going_well)
 		sql.sql.update_result_text_student_date(1, '2018-09-03', 'issues', issues)
 		sql.sql.update_result_text_student_date(1, '2018-09-03', 'what_to_try', what_to_try)
+		sql.sql.update_result_text_student_date(1, '2018-09-03', 'exercise', exercise)
 		result = sql.sql.get_results_by_student_date(1, '2018-09-03')
 		self.assertEqual(going_well, result[0][1])
 		self.assertEqual(issues, result[0][2])
 		self.assertEqual(what_to_try, result[0][3])
+		self.assertEqual(exercise, result[0][4])
 
 	def test_update_results(self):
 		# Big assumptions here which is bad the student already exists
@@ -198,17 +201,17 @@ class TestSql(unittest.TestCase):
 		self.assertEqual(0, sql.sqlutil.init_results())
 
 		result = '{"sql":1,"logic":2}'
-		s = [2,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
+		s = [2,'2018-09-10',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)
 
-		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)
 
 	def create_test_data2(self):
 		result = '{"sql":1,"logic":1}'
-		s = [2,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		s = [2,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)
 
 		result = '{"sql":3,"logic":3}'
-		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
+		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)

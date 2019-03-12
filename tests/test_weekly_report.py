@@ -19,13 +19,13 @@ class TestWeeklyReport(unittest.TestCase):
 		self.assertEqual(0, sql.sqlutil.init_results())
 
 		result = '{"SQL":1,"JS Logic":2}'
-		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week']
+		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)
 		result = '{"SQL":1,"JS Logic":3}'
-		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week']
+		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)
 		result = '{"SQL":1,"JS Logic":4}'
-		s = [1,'2018-09-17',result,'all is well', 'no issues', 'try harder next week']
+		s = [1,'2018-09-17',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)
 
 		report = utils.weekly_report.create_weekly_report('2018-09-03', '2018-09-17')
@@ -54,7 +54,7 @@ class TestWeeklyReport(unittest.TestCase):
 		self.assertEqual(5,
 						report.class_progress[1].get_last_score())
 
-		s = [2,'2018-09-17',result,'all is well', 'no issues', 'try harder next week']
+		s = [2,'2018-09-17',result,'all is well', 'no issues', 'try harder next week', '100']
 		sql.sql.insert_results(s)
 
 		report = utils.weekly_report.create_weekly_report('2018-09-03', '2018-09-17')

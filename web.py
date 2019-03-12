@@ -171,7 +171,7 @@ def results(date=None):
 
 		allow_input = True if (this_monday == monday) else False 
 
-		results, going_well, issues, what_to_try  = sql.get_result_object_by_student_date(id, str(monday))
+		results, going_well, issues, what_to_try, exercise  = sql.get_result_object_by_student_date(id, str(monday))
 
 		return jsonify({'results':results,
 						'last_monday': str(last_monday), 
@@ -180,6 +180,7 @@ def results(date=None):
 						'allow_input': allow_input,
 						'going_well': going_well,
 						'issues': issues,
+						'exercise': exercise,
 						'what_to_try': what_to_try})
 
 	except KeyError as e:
