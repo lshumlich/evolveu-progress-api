@@ -30,7 +30,7 @@ class Progress (things.struc.Struc):
 # missing = []
 # class_progress = []
 
-def create_weekly_report(start_date, report_date, student=None):
+def create_weekly_report(start_date, report_date, student=None, qtype=None):
 
 	# global week_number, results, questions, missing, progress
 
@@ -48,7 +48,7 @@ def create_weekly_report(start_date, report_date, student=None):
 	wr.week_number = course_mondays.get(report_date, course_length_weeks)
 
 	wr.results = sql.sql.get_prev_results_obj(level=wr.week_number, date=report_date, order="date, name", student=student)
-	wr.questions = sql.sql.get_questions()
+	wr.questions = sql.sql.get_questions(qtype)
 	wr.missing = sql.sql.get_missing_for_date(report_date)
 
 	target_points = 5 * len(wr.questions)

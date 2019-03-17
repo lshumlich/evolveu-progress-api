@@ -6,7 +6,7 @@ PYTHONPATH=. pytest
 --- Select only tests that have questions in the test name and don't hide the output
 PYTHONPATH=. pytest -k questions -s
 PYTHONPATH=. pytest -s
-PYTHONPATH=. pytest tests/test_sql.py -k _obj -s
+PYTHONPATH=. pytest tests/test_results.py -s -k _res
 
 
 """
@@ -94,3 +94,18 @@ class TestResults(unittest.TestCase):
 						  {'axis': 'Asdf', 'value': 0}, 
 						  {'axis': 'Basic DS', 'value': 3}],
 						 result_09_03.get_prev_question_results(2, questions))
+
+	def test_prev_total_for_questions(self):
+		# def __init__(self, date, student_id, student, result, going_well, issues, what_to_try):
+		result_2019_03_18 = things.results.Result('2019-03-18', 1000, 'Larry Shumlich', 
+										{'Logic':2,'JS':3, 'PY':4},
+										'going well', 'real issues', 'try new stuff', '100')
+
+		self.assertEqual(9, result_2019_03_18.get_prev_total(0))
+
+		questions = [{'code':'Logic'}, {'code':'Asdf'}, {'code':'JS'}]
+		self.assertEqual(5, 
+			result_2019_03_18.total_for_questions(questions))
+		self.assertEqual(5, 
+			result_2019_03_18.get_prev_total_for_questions(0, questions))
+

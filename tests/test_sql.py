@@ -6,7 +6,7 @@ PYTHONPATH=. pytest
 --- Select only tests that have questions in the test name and don't hide the output
 PYTHONPATH=. pytest -k questions -s
 PYTHONPATH=. pytest -s
-PYTHONPATH=. pytest tests/test_sql.py -k _obj -s
+PYTHONPATH=. pytest tests/test_sql.py -s -k _obj
 
 
 """
@@ -107,8 +107,28 @@ class TestSql(unittest.TestCase):
 
 	def test_questions(self):
 		sql.sqlutil.init_questions()
+
+		qtype = "tech"
+		tech_questions = sql.sql.get_questions(qtype)
+		self.assertTrue(len(tech_questions) > 1)
+		for q in tech_questions:
+			self.assertEqual(qtype, q['type'])
+		# print(tech_questions)
+
+		qtype = "soft"
+		soft_questions = sql.sql.get_questions(qtype)
+		self.assertTrue(len(soft_questions) > 1)
+		for q in soft_questions:
+			self.assertEqual(qtype, q['type'])
+		# print(soft_questions)
+
 		questions = sql.sql.get_questions()
 		self.assertTrue(len(questions) > 1)
+		self.assertEqual(len(questions), len(tech_questions) + len(soft_questions))
+		# print(questions)
+		# print(len(tech_questions))
+		# print(len(soft_questions))
+		# print(len(questions))
 
 	def test_get_results_obj(self):
 		self.create_test_data1()

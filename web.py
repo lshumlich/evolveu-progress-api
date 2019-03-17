@@ -10,6 +10,7 @@ DATABASE_URL="dbname=larry3 user=larry" ./start
 """
 import os
 import datetime
+import time
 import io
 from flask import Flask, request, session, escape, jsonify, send_file, render_template
 from flask_cors import CORS
@@ -49,6 +50,8 @@ def who():
 
 @app.route("/gsignon", methods = ['POST'])
 def google_signon():
+	# time.sleep(5)		# Testing only
+
 	# s = escape(str(session))
 	# print("Session for this dude:", s)
 	content = request.get_json()
@@ -89,7 +92,7 @@ def google_signon():
 # 
 @app.route("/validuser", methods = ['POST'])
 def valid_user():
-
+	# time.sleep(5)		# Testing only
 	try:
 		content = request.get_json()
 		user = get_user(content)
@@ -261,10 +264,29 @@ def adduser(uuid):
 #  ???? Delete Me I Think ???
 # Show student progress: Comments / Skill Self Assements / Class Progress
 #
+
+
+
+@app.route("/commentstech/<uuid>/")
+@app.route("/commentstech/<uuid>/")
+@app.route("/commentstech/<uuid>/<date>/")
+@app.route("/commentstech/<uuid>/<date>/<student>/")
+def commentstech(uuid, date=None, student=None):
+	return comments(uuid, date, student, "tech")
+
+
+@app.route("/commentssoft/<uuid>/")
+@app.route("/commentssoft/<uuid>/")
+@app.route("/commentssoft/<uuid>/<date>/")
+@app.route("/commentssoft/<uuid>/<date>/<student>/")
+def commentssoft(uuid, date=None, student=None):
+	return comments(uuid, date, student, "soft")
+
+
 @app.route("/comments/<uuid>/")
 @app.route("/comments/<uuid>/<date>/")
 @app.route("/comments/<uuid>/<date>/<student>/")
-def comments(uuid, date=None, student=None):
+def comments(uuid, date=None, student=None, qtype=None):
 	#
 	# Hard coded today but must be changed
 	#
@@ -275,7 +297,7 @@ def comments(uuid, date=None, student=None):
 	user_lookup = sql.get_user_by_uuid(uuid)
 	if user_lookup:
 		if user_lookup.admin:
-			report = utils.weekly_report.create_weekly_report(start_date, date, student)
+			report = utils.weekly_report.create_weekly_report(start_date, date, student, qtype)
 			scroll = utils.dates.scroll_mondays(start_date, date)
 			return render_template('comments.html', results=report.results, questions=report.questions, 
 								   missing=report.missing, progress=report.class_progress, 

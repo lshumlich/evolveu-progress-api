@@ -8,31 +8,13 @@ import uuid
 
 import psycopg2
 from psycopg2 import sql 
+
+import sql.data
 import utils.dates
 import things.results
 import things.user
 import things.session
 from things.struc import Struc 
-
-# --- Questions
-
-drop_questions = """
-Drop table questions;
-"""
-
-create_questions = """
-Create table questions (
-	Seq integer not null,
-	Code varChar(16) not null unique primary key,
-	Question text not null
-);
-"""
-
-insert_questions = """
-insert into questions (seq, code, question) values(%s, %s, %s)
-"""
-
-# --- Users
 
 drop_users = """
 Drop table users;
@@ -131,16 +113,15 @@ def delete_all_sessions():
 	"""
 	sql_util(delete_all_sessions_string, [])
 
-select_questions = """
-select code,question from questions order by seq;
-"""
-
-def get_questions():
+def get_questions(qtype=None):
 	results = []
-	columns = ('code', 'question')
-	questions = select(select_questions,[])
-	for q in questions:
-		results.append(dict(zip(columns,q)))
+	columns = ('type', 'code', 'question')
+	for l in sql.data.questions.split('\n'):
+		if l:
+			a = l.split('@')
+			if (not qtype or qtype == a[0]):
+				results.append(dict(zip(columns, l.split('@'))))
+
 	return results
 
 # f8862239-ec71-43b9-b9a9-5cf918040f08 (Sample of a uuid)
@@ -274,7 +255,7 @@ def get_results_obj(date=None, student=None, order=None):
 	sql_results = select(sql_string, [])
 	res = []
 	for r in sql_results:
-		print('rrrr', r)
+		# print('rrrr', r)
 		res.append(things.results.Result(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7]))
 
 	return res

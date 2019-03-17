@@ -41,40 +41,9 @@ def load_questions():
 
 def init_questions():
 	""" 
-	Load the questions into the questions database. It is important
-	if there is existing data that the question-code does not change. All the weekly
-	data is stored based on the code.
+	do nothing right now.
 	"""
-	try:
-		# print("-- Init Questions --");
-		conn = psycopg2.connect(sql.sql.get_connect_string(), sslmode='require')
-		cur = conn.cursor()
-		try:
-			res = cur.execute(sql.sql.drop_questions)
-		except psycopg2.ProgrammingError as e:
-			print('Delete failed',sys.exc_info()[1])
-
-		res = cur.execute(sql.sql.create_questions)
-		questions = load_questions()
-		count = 0
-		for q in questions:
-			res = cur.execute(sql.sql.insert_questions, q)
-			count += 1
-		# print('--Questions Inserted:',count)
-
-		conn.commit()
-	except psycopg2.IntegrityError:
-		print('*** Duplicate Key***')
-		print('--1--',sys.exc_info()[1])
-		raise
-	except:
-		print('***We had a problem Huston...', sys.exc_info())
-		traceback.print_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-		raise
-	finally:
-		cur.close()
-		conn.close()
-
+	None 
 
 def questions():
 	for q in sql.sql.get_questions():
@@ -212,10 +181,9 @@ Pass one of the following options:
 
 init-users          : drop and create the users table and add one user
 init-results        : drop and create the results table
-init-questions      : drop and create the questions table and load questions
 init-session		: drop and create the session table
 ---
-questions           : will show the current questions loaded in teh database
+questions           : will show the current questions loaded in the database
 get-user-by-uuid    : get a user based on uuid
 connect             : will show the connection string that will be used
 test                : just some play stuff
@@ -224,7 +192,6 @@ test                : just some play stuff
 options = {
 	"init-users" : init_users,
 	"init-results" : init_results,
-	"init-questions" : init_questions,
 	"init-session" : init_session,
 	"questions" : questions,
 	"get-user-by-uuid" : get_user_by_uuid,

@@ -138,7 +138,7 @@
 <div class="center90">
 	{% for r in results %}
 		<div class="border1" style="float:left;">
-			<div class="center"> <b>{{ r.first_name() }} {{ r.get_prev_total(2) }} {{ r.get_prev_total(1) }} {{ r.get_prev_total(0) }}</b>  </div>
+			<div class="center"> <b>{{ r.first_name() }} {{ r.get_prev_total_for_questions(2, questions) }} {{ r.get_prev_total_for_questions(1, questions) }} {{ r.get_prev_total_for_questions(0, questions) }}</b>  </div>
 			<div id="{{ r.field_name() }}_div"> </div>
 		 </div>
 	{% endfor %}

@@ -51,6 +51,19 @@ class Result(things.struc.Struc):
 			return result.total()
 		return 0
 
+	def total_for_questions(self, questions):
+		sum = 0
+		for q in questions:
+			value = self.results_val.get(q['code'],0)
+			sum += value
+		return sum
+
+	def get_prev_total_for_questions(self, level, questions):
+		result = self.get_prev_result(level)
+		if result:
+			return result.total_for_questions(questions)
+		return 0
+
 	def get_prev_question_results(self, level, questions):
 		result = self.get_prev_result(level)
 		if result:
