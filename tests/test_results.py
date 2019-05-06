@@ -15,6 +15,7 @@ import datetime
 import sql.sql
 import sql.sqlutil
 import things.results
+import json
 
 class TestResults(unittest.TestCase):
 
@@ -109,3 +110,18 @@ class TestResults(unittest.TestCase):
 		self.assertEqual(5, 
 			result_2019_03_18.get_prev_total_for_questions(0, questions))
 
+	def test_json(self):
+		x = datetime.date(2019,3,18)
+		y = datetime.datetime.now()
+		print('date--->', x, y)
+		# def __init__(self, date, student_id, student, result, going_well, issues, what_to_try):
+		result1 = things.results.Result(datetime.date(2019,3,18), 1000, 'Larry Shumlich', 
+										{'Logic':2,'JS':3, 'PY':4},
+										'going well', 'real issues', 'try new stuff', '100')
+		result2 = things.results.Result(datetime.datetime.now(), 1000, 'Larry Shumlich', 
+										{'Logic':2,'JS':3, 'PY':4},
+										'going well', 'real issues', 'try new stuff', '100')
+		a = [result1,result2]
+
+		j = json.dumps(a, cls=things.results.ComplexEncoder)
+		print(j)

@@ -24,6 +24,7 @@ import sql.sql as sql
 import utils.dates
 import utils.results
 import utils.weekly_report as report
+import things.results
 
 print("--- Starting", __file__)
 CLIENT_ID = "225894951024-d2b5jugscfmfsp8fr6vd5mqhfl5si3uq.apps.googleusercontent.com"
@@ -31,6 +32,8 @@ CLIENT_ID = "225894951024-d2b5jugscfmfsp8fr6vd5mqhfl5si3uq.apps.googleuserconten
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
 CORS(app, supports_credentials=True)
+
+app.json_encoder = things.results.ComplexEncoder
 
 
 @app.route("/")
@@ -96,7 +99,8 @@ def valid_user():
 	try:
 		content = request.get_json()
 		user = get_user(content)
-		return jsonify({'name':user.name}), 200
+		print('----user:', user)
+		return jsonify({'name':user.name, 'admin':user.admin}), 200
 	except KeyError:
 		print('**** Not a valid request ***')
 
@@ -138,6 +142,21 @@ def register():
 @app.route("/questions")
 def questions():
 	return jsonify(sql.get_questions())
+
+
+@app.route("/all", methods = ['POST'])
+def getAll():
+	try:
+		content = request.get_json()
+		user = get_user(content)
+		if user.admin:
+			results = sql.get_results_obj()
+			return jsonify(results)
+	except Exception as e:
+		print('Not an admin user ***', e)
+
+	return jsonify('{}'), 404
+
 #
 # Get results to display
 #

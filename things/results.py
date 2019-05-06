@@ -1,4 +1,6 @@
 
+import datetime
+
 import json
 import things.struc
 
@@ -87,3 +89,21 @@ class Result(things.struc.Struc):
 
 	def __repr__(self):
 		return self.__str__()
+
+	def reprJSON(self):
+		# print(self.__dict__)
+		return self.__dict__
+		# return json.dumps(self.__dict__)
+		# return json.dumps(self, default=lambda o: o.__dict__)
+		# return json.dumps(self, default=lambda o: o.__dict__, 
+  #           sort_keys=True, indent=4)
+
+
+class ComplexEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj,'reprJSON'):
+            return obj.reprJSON()
+        elif isinstance(obj, datetime.date):
+        	return obj.__str__()
+        else:
+            return json.JSONEncoder.default(self, obj)
