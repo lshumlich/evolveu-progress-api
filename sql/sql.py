@@ -46,7 +46,9 @@ Create table results (
 	going_well text,
 	issues text,
 	what_to_try text,
-	exercise text
+	exercise text,
+	industryproj boolean,
+	predcompdate date
 );
 """
 
@@ -172,15 +174,15 @@ def get_user_by_email(email):
 
 insert_results_string = """
 insert into 
-	results (student, date, result, going_well, issues, what_to_try, exercise) 
-	values  (%s, %s, %s, %s, %s, %s, %s) returning id;
+	results (student, date, result, going_well, issues, what_to_try, exercise, industryproj, predcompdate) 
+	values  (%s, %s, %s, %s, %s, %s, %s, %s, %s) returning id;
 """
 
 def insert_results(data):
 	return sql_util(insert_results_string, data)
 
 get_results_by_student_date_string = """
-select result, going_well, issues, what_to_try, exercise
+select result, going_well, issues, what_to_try, exercise, industryproj, predcompdate
 	from results
 	where student = %s and date = %s;
 """
@@ -193,17 +195,19 @@ def get_results_by_student_date(student, date):
 	last_monday = utils.dates.last_monday(utils.dates.to_date(date))
 	r = select(get_results_by_student_date_string, [student, str(last_monday)])
 	if r:
-		new_r = [r[0][0], '', '', '', '']
+		new_r = [r[0][0], '', '', '', r[0][4], r[0][5], r[0][6]]
 		insert_results([student, date] + new_r)
 		return [new_r]
 	# insert an empty one
-	new_r = ['{}', '', '', '', '']
+	# new_r = ['{}', '', '', '', '', 'false', '2019-01-01']
+	new_r = ['{}', '', '', '', '', 'false', datetime.datetime.now().date()]
 	insert_results([student, date] + new_r)
 	return [new_r]
 
 def get_result_object_by_student_date(student_id, date):
 	result = get_results_by_student_date(student_id, date)
-	return json.loads(result[0][0]),result[0][1],result[0][2],result[0][3],result[0][4]
+	# print(result)
+	return json.loads(result[0][0]),result[0][1],result[0][2],result[0][3],result[0][4],result[0][5],result[0][6]
 
 
 get_results_string = """
@@ -224,7 +228,7 @@ def get_results():
 #
 
 get_results_obj_string = """
-select date, student, name, result, going_well, issues, what_to_try, exercise
+select date, student, name, result, going_well, issues, what_to_try, exercise, industryproj, predcompdate
 	from results, users
 	where
 	student = users.id
@@ -256,7 +260,7 @@ def get_results_obj(date=None, student=None, order=None):
 	res = []
 	for r in sql_results:
 		# print('rrrr', r)
-		res.append(things.results.Result(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7]))
+		res.append(things.results.Result(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[8],r[9]))
 
 	return res
 

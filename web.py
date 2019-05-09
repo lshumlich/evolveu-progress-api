@@ -58,7 +58,7 @@ def google_signon():
 	# s = escape(str(session))
 	# print("Session for this dude:", s)
 	content = request.get_json()
-	# print(content)
+	# print('google_signon',content)
 
 	try:
 		# ask google if they are valid
@@ -86,9 +86,10 @@ def google_signon():
 			'name': name, 
 			'admin': admin}), 200
 
-	except ValueError:
-		print('**** Not a valid request ***')
+	except Exception as e:
+		print('**** Not a valid request ***', e)
 
+	# print('google_signon not a valid request')
 	return jsonify('{}'), 404
 # 
 # Check to see if the session is still valid
@@ -99,10 +100,10 @@ def valid_user():
 	try:
 		content = request.get_json()
 		user = get_user(content)
-		print('----user:', user)
+		# print('----user:', user)
 		return jsonify({'name':user.name, 'admin':user.admin}), 200
-	except KeyError:
-		print('**** Not a valid request ***')
+	except Exception as e:
+		print('**** Not a valid request ***', e)
 
 	return jsonify('{}'), 404
 # 
@@ -114,8 +115,8 @@ def signout_user():
 	try:
 		content = request.get_json()
 		clear_email(content)
-	except KeyError:
-		print('**** Not a valid user but we do not care ***')
+	except Exception as e:
+		print('**** Not a valid user but we do not care ***', e)
 
 	return jsonify('{}'), 200
 
@@ -193,7 +194,7 @@ def results(date=None):
 
 		allow_input = True if (this_monday == monday) else False 
 
-		results, going_well, issues, what_to_try, exercise  = sql.get_result_object_by_student_date(id, str(monday))
+		results, going_well, issues, what_to_try, exercise, industryproj, predcompdate  = sql.get_result_object_by_student_date(id, str(monday))
 
 		return jsonify({'results':results,
 						'last_monday': str(last_monday), 
@@ -201,6 +202,8 @@ def results(date=None):
 						'next_monday': str(next_monday),
 						'allow_input': allow_input,
 						'going_well': going_well,
+						'industryproj': industryproj,
+						'predcompdate': predcompdate,
 						'issues': issues,
 						'exercise': exercise,
 						'what_to_try': what_to_try})

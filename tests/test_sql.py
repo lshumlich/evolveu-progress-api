@@ -22,7 +22,7 @@ class TestSql(unittest.TestCase):
 		self.assertEqual(0, sql.sqlutil.init_results())
 
 		result = '{"sql":1,"logic":2}'
-		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100']
+		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100', 'true', datetime.date(2019,5,30)]
 		sql.sql.insert_results(s)
 
 		r = sql.sql.get_results_by_student_date(1, '2018-09-03')
@@ -219,19 +219,19 @@ class TestSql(unittest.TestCase):
 	def create_test_data1(self):
 		sql.sqlutil.init_users()
 		self.assertEqual(0, sql.sqlutil.init_results())
-
+										
 		result = '{"sql":1,"logic":2}'
-		s = [2,'2018-09-10',result,'all is well', 'no issues', 'try harder next week', '100']
+		s = [2,'2018-09-10',result,'all is well', 'no issues', 'try harder next week', '100', 'true', datetime.date(2019,5,30)]
 		sql.sql.insert_results(s)
 
-		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100']
+		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100', 'true', datetime.date(2019,5,30)]
 		sql.sql.insert_results(s)
 
 	def create_test_data2(self):
 		result = '{"sql":1,"logic":1}'
-		s = [2,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100']
+		s = [2,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100', 'true', datetime.date(2019,5,30)]
 		sql.sql.insert_results(s)
 
 		result = '{"sql":3,"logic":3}'
-		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week', '100']
+		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week', '100', 'true', datetime.date(2019,5,30)]
 		sql.sql.insert_results(s)
