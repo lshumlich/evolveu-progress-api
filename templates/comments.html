@@ -123,10 +123,15 @@
 		<th class="border1"> 
 			<a href="/comments/{{uuid}}/{{scroll.display_monday}}/{{r.student_id}}/">{{r.first_name()}}</a>
 		</th>
-		<td class="border1"> 
+		<td class="border1">
 			{{ r.exercise }} 
 			Completion: {{ r.predcompdate }} 
-			Project: {{ r.industryproj }} 
+			Project: 
+			{% if r.industryproj is none %}
+			 	True
+			 {%else%}
+			 	{{ r.industryproj }}
+			 {%endif%}
 			<br/>
 			{{ r.going_well }} 
 		</td>
