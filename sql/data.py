@@ -17,6 +17,8 @@ tech@Py Flask@Python Flask
 tech@Py API@Python API
 tech@Data Struc@Database Structures / Concepts / Normalization / Joins / Keys / Concurrency 
 tech@SQL@SQL
+tech@CS Theory@CS Theory
+tech@AP@Advanced Project
 soft@Career Dev@Career Development
 soft@Critical Tking@Critical Thinking
 soft@Systems Tking@Systems Thinking
