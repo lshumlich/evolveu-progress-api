@@ -68,3 +68,27 @@ class TestWeeklyReport(unittest.TestCase):
 		#TODO 
 		# report = utils.weekly_report.create_weekly_report('2018-09-03', '2019-01-07')
 		# self.assertEqual(2, len(report.results))
+
+
+
+	def test_weekly_report_with_missing(self):
+		print('--------------------Start--------------------')
+		sql.sqlutil.init_users()
+		self.assertEqual(0, sql.sqlutil.init_results())
+
+		result = '{"SQL":1,"JS Logic":2}'
+		s = [1,'2018-09-03',result,'all is well', 'no issues', 'try harder next week', '100', 'true', datetime.date(2019,5,30)]
+		sql.sql.insert_results(s)
+		result = '{"SQL":1,"JS Logic":3}'
+		s = [1,'2018-09-10',result,'all is well', 'no issues', 'try harder next week', '100', 'true', datetime.date(2019,5,30)]
+		# sql.sql.insert_results(s)
+		result = '{"SQL":1,"JS Logic":4}'
+		s = [1,'2018-09-17',result,'all is well', 'no issues', 'try harder next week', '100', 'true', datetime.date(2019,5,30)]
+		sql.sql.insert_results(s)
+
+		report = utils.weekly_report.create_weekly_report('2018-09-03', '2018-09-17')
+
+		print(report.class_progress[1].get_weekly_results())
+		print(report.class_progress[1].weekly)
+		print(report.results)
+		# self.assertEqual([3,4,5], report.class_progress[1].weekly)

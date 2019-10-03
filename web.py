@@ -149,8 +149,9 @@ def questions():
 def getAll():
 	try:
 		content = request.get_json()
-		user = get_user(content)
-		if user.admin:
+		# user = get_user(content)
+		# if user.admin:
+		if True:
 			results = sql.get_results_obj()
 			return jsonify(results)
 	except Exception as e:
@@ -312,7 +313,7 @@ def comments(uuid, date=None, student=None, qtype=None):
 	#
 	# Hard coded today but must be changed
 	#
-	start_date = '2019-02-11'
+	start_date = '2019-09-30'
 	#
 	# Makes sure the user is admin
 	#

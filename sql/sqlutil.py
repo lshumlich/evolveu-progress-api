@@ -82,8 +82,8 @@ def init_users():
 		cur.close()
 		conn.close()
 
-	sql.sql.insert_users('Larry Shumlich', 'lshumlich@gmail.com', '2018-09-03', True)
-	sql.sql.insert_users('Lorraine Shumlich', 'lmshumlich@gmail.com', '2018-09-03', False)
+	sql.sql.insert_users('Larry Shumlich', 'lshumlich@gmail.com', '2019-09-30', True)
+	sql.sql.insert_users('Lorraine Shumlich', 'lmshumlich@gmail.com', '2019-09-30', False)
 	# print('--Users Inserted: 2')
 
 def get_user_by_uuid():
@@ -179,7 +179,7 @@ def usage():
 	print("""
 Pass one of the following options:
 
-init-users          : drop and create the users table and add one user
+init-users          : drop and create the users table and add two users
 init-results        : drop and create the results table
 init-session		: drop and create the session table
 ---

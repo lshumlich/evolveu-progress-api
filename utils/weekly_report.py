@@ -36,7 +36,7 @@ def create_weekly_report(start_date, report_date, student=None, qtype=None):
 
 	wr = WeeklyReport()
 
-	course_length_weeks = 15
+	course_length_weeks = 23
 
 	course_mondays = utils.dates.course_weeks(start_date, course_length_weeks)
 	if not report_date:

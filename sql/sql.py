@@ -266,6 +266,7 @@ def get_results_obj(date=None, student=None, order=None):
 
 def get_prev_results_obj(level=0, date=None, student=None, order=None):
 	results = get_results_obj(date=date, student=student, order=order)
+	# print('get_prev_results_obj', results)
 	if level:
 		students = {}
 		for r in results:
