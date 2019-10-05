@@ -41,7 +41,8 @@ class Result(things.struc.Struc):
 		return self.student.split()[0]
 
 	def field_name(self):
-		return f'{self.first_name()}_{self.student_id}'
+		# return f'{self.first_name()}_{self.student_id}'
+		return f'student_{self.student_id}'
 
 	def total(self):
 		sum = 0
