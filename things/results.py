@@ -6,10 +6,11 @@ import things.struc
 
 
 class Result(things.struc.Struc):
-	def __init__(self, date, student_id, student, results, going_well, issues, what_to_try, exercise, industryproj, predcompdate):
+	def __init__(self, date, student_id, student, email, results, going_well, issues, what_to_try, exercise, industryproj, predcompdate):
 		self.date = date
 		self.student_id = student_id
 		self.student = student
+		self.email = email
 		self.set_results(results)
 		self.going_well = going_well
 		self.issues = issues
@@ -88,7 +89,7 @@ class Result(things.struc.Struc):
 		return result
 
 	def __str__(self):
-		return f'Result=student: {self.student_id} {self.student}, date: {self.date}, result: {self.results_val}, going_well: {self.going_well}, issues: {self.issues}, what_to_try: {self.what_to_try}'
+		return f'Result=student: {self.student_id} {self.student} {self.email}, date: {self.date}, result: {self.results_val}, going_well: {self.going_well}, issues: {self.issues}, what_to_try: {self.what_to_try}'
 
 	def __repr__(self):
 		return self.__str__()

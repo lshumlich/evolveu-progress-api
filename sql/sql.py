@@ -228,7 +228,7 @@ def get_results():
 #
 
 get_results_obj_string = """
-select date, student, name, result, going_well, issues, what_to_try, exercise, industryproj, predcompdate
+select date, student, name, email, result, going_well, issues, what_to_try, exercise, industryproj, predcompdate
 	from results, users
 	where
 	student = users.id
@@ -260,7 +260,7 @@ def get_results_obj(date=None, student=None, order=None):
 	res = []
 	for r in sql_results:
 		# print('rrrr', r)
-		res.append(things.results.Result(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[8],r[9]))
+		res.append(things.results.Result(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[8],r[9],r[10]))
 
 	return res
 
