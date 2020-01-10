@@ -1,2 +1,3 @@
 echo --- starting web app local ---
+pipenv shell
 DATABASE_URL="dbname=larry3 user=larry" gunicorn web:app --reload --log-file=-
