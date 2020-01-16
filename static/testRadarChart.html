@@ -1,89 +1,483 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Progress 4</title>
-	<!-- Google fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
-	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <title>Progress 4</title>
+    <!-- Google fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
-	<script src="radarChart.js"> </script>
-	<!-- D3.js -->
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script> -->
-	<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-	<script src="https://d3js.org/d3-path.v1.min.js" charset="utf-8"></script>
+    <script src="radarChart.js">
+    </script>
+    <!-- D3.js -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script> -->
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3-path.v1.min.js" charset="utf-8"></script>
 
-	<script>
-		var Larry = [ 
-				{name:'This Week',
-				axes: 
-				 	[{'axis': 'Logic', 'value': 3}, {'axis': 'Basic DS', 'value': 4}, {'axis': 'Python', 'value': 5}, {'axis': 'git', 'value': 6}, {'axis': 'HTML', 'value': 5}, {'axis': 'CSS', 'value': 6}, {'axis': 'OO', 'value': 7}, {'axis': 'TDD', 'value': 7}, {'axis': 'User Exp', 'value': 0}, {'axis': 'Basic JS', 'value': 0}, {'axis': 'JS Events', 'value': 0}, {'axis': 'ES6-7', 'value': 0}, {'axis': 'ReactJS', 'value': 0}, {'axis': 'NodeJS', 'value': 0}, {'axis': 'Data Struc', 'value': 0}, {'axis': 'SQL', 'value': 0}, {'axis': 'App Server', 'value': 0}, {'axis': 'Web Services', 'value': 0}, {'axis': 'Mentor', 'value': 0}, {'axis': 'Problem Solv', 'value': 0}, {'axis': 'PM', 'value': 0}] ,
-				},
-				{name:'Last Week',
-				axes:
-					[{'axis': 'Logic', 'value': 2}, {'axis': 'Basic DS', 'value': 3}, {'axis': 'Python', 'value': 4}, {'axis': 'git', 'value': 5}, {'axis': 'HTML', 'value': 5}, {'axis': 'CSS', 'value': 6}, {'axis': 'OO', 'value': 7}, {'axis': 'TDD', 'value': 7}, {'axis': 'User Exp', 'value': 0}, {'axis': 'Basic JS', 'value': 0}, {'axis': 'JS Events', 'value': 0}, {'axis': 'ES6-7', 'value': 0}, {'axis': 'ReactJS', 'value': 0}, {'axis': 'NodeJS', 'value': 0}, {'axis': 'Data Struc', 'value': 0}, {'axis': 'SQL', 'value': 0}, {'axis': 'App Server', 'value': 0}, {'axis': 'Web Services', 'value': 0}, {'axis': 'Mentor', 'value': 0}, {'axis': 'Problem Solv', 'value': 0}, {'axis': 'PM', 'value': 0}] ,
-				},
-				{name:'Two Weeks',
-				axes:
-					[{'axis': 'Logic', 'value': 1}, {'axis': 'Basic DS', 'value': 2}, {'axis': 'Python', 'value': 3}, {'axis': 'git', 'value': 4}, {'axis': 'HTML', 'value': 5}, {'axis': 'CSS', 'value': 6}, {'axis': 'OO', 'value': 7}, {'axis': 'TDD', 'value': 7}, {'axis': 'User Exp', 'value': 0}, {'axis': 'Basic JS', 'value': 0}, {'axis': 'JS Events', 'value': 0}, {'axis': 'ES6-7', 'value': 0}, {'axis': 'ReactJS', 'value': 0}, {'axis': 'NodeJS', 'value': 0}, {'axis': 'Data Struc', 'value': 0}, {'axis': 'SQL', 'value': 0}, {'axis': 'App Server', 'value': 0}, {'axis': 'Web Services', 'value': 0}, {'axis': 'Mentor', 'value': 0}, {'axis': 'Problem Solv', 'value': 0}, {'axis': 'PM', 'value': 0}] ,
-				},
-			];
-		var Lorraine = [ 
-				{name:'This Week',
-				axes: 
-				 	[{'axis': 'Logic', 'value': 5}, {'axis': 'Basic DS', 'value': 5}, {'axis': 'Python', 'value': 5}, {'axis': 'git', 'value': 6}, {'axis': 'HTML', 'value': 5}, {'axis': 'CSS', 'value': 6}, {'axis': 'OO', 'value': 7}, {'axis': 'TDD', 'value': 7}, {'axis': 'User Exp', 'value': 0}, {'axis': 'Basic JS', 'value': 0}, {'axis': 'JS Events', 'value': 0}, {'axis': 'ES6-7', 'value': 0}, {'axis': 'ReactJS', 'value': 0}, {'axis': 'NodeJS', 'value': 0}, {'axis': 'Data Struc', 'value': 0}, {'axis': 'SQL', 'value': 0}, {'axis': 'App Server', 'value': 0}, {'axis': 'Web Services', 'value': 0}, {'axis': 'Mentor', 'value': 0}, {'axis': 'Problem Solv', 'value': 0}, {'axis': 'PM', 'value': 0}] ,
-				},
-				{name:'Last Week',
-				axes:
-					[{'axis': 'Logic', 'value': 4}, {'axis': 'Basic DS', 'value': 5}, {'axis': 'Python', 'value': 4}, {'axis': 'git', 'value': 5}, {'axis': 'HTML', 'value': 5}, {'axis': 'CSS', 'value': 6}, {'axis': 'OO', 'value': 7}, {'axis': 'TDD', 'value': 7}, {'axis': 'User Exp', 'value': 0}, {'axis': 'Basic JS', 'value': 0}, {'axis': 'JS Events', 'value': 0}, {'axis': 'ES6-7', 'value': 0}, {'axis': 'ReactJS', 'value': 0}, {'axis': 'NodeJS', 'value': 0}, {'axis': 'Data Struc', 'value': 0}, {'axis': 'SQL', 'value': 0}, {'axis': 'App Server', 'value': 0}, {'axis': 'Web Services', 'value': 0}, {'axis': 'Mentor', 'value': 0}, {'axis': 'Problem Solv', 'value': 0}, {'axis': 'PM', 'value': 0}] ,
-				},
-				{name:'Two Weeks',
-				axes:
-					[{'axis': 'Logic', 'value': 3}, {'axis': 'Basic DS', 'value': 5}, {'axis': 'Python', 'value': 3}, {'axis': 'git', 'value': 4}, {'axis': 'HTML', 'value': 5}, {'axis': 'CSS', 'value': 6}, {'axis': 'OO', 'value': 7}, {'axis': 'TDD', 'value': 7}, {'axis': 'User Exp', 'value': 0}, {'axis': 'Basic JS', 'value': 0}, {'axis': 'JS Events', 'value': 0}, {'axis': 'ES6-7', 'value': 0}, {'axis': 'ReactJS', 'value': 0}, {'axis': 'NodeJS', 'value': 0}, {'axis': 'Data Struc', 'value': 0}, {'axis': 'SQL', 'value': 0}, {'axis': 'App Server', 'value': 0}, {'axis': 'Web Services', 'value': 0}, {'axis': 'Mentor', 'value': 0}, {'axis': 'Problem Solv', 'value': 0}, {'axis': 'PM', 'value': 0}] ,
-				},
-			];
-	</script>
+    <script>
+        var Larry = [{
+            name: 'This Week',
+            axes: [{
+                'axis': 'Logic',
+                'value': 5
+            }, {
+                'axis': 'Basic DS',
+                'value': 5
+            }, {
+                'axis': 'Python',
+                'value': 5
+            }, {
+                'axis': 'git',
+                'value': 6
+            }, {
+                'axis': 'HTML',
+                'value': 5
+            }, {
+                'axis': 'CSS',
+                'value': 6
+            }, {
+                'axis': 'OO',
+                'value': 7
+            }, {
+                'axis': 'TDD',
+                'value': 7
+            }, {
+                'axis': 'User Exp',
+                'value': 0
+            }, {
+                'axis': 'Basic JS',
+                'value': 0
+            }, {
+                'axis': 'JS Events',
+                'value': 0
+            }, {
+                'axis': 'ES6-7',
+                'value': 0
+            }, {
+                'axis': 'ReactJS',
+                'value': 0
+            }, {
+                'axis': 'NodeJS',
+                'value': 0
+            }, {
+                'axis': 'Data Struc',
+                'value': 0
+            }, {
+                'axis': 'SQL',
+                'value': 0
+            }, {
+                'axis': 'App Server',
+                'value': 0
+            }, {
+                'axis': 'Web Services',
+                'value': 0
+            }, {
+                'axis': 'Mentor',
+                'value': 0
+            }, {
+                'axis': 'Problem Solv',
+                'value': 0
+            }, {
+                'axis': 'PM',
+                'value': 0
+            }],
+        }, {
+            name: 'Last Week',
+            axes: [{
+                'axis': 'Logic',
+                'value': 2
+            }, {
+                'axis': 'Basic DS',
+                'value': 3
+            }, {
+                'axis': 'Python',
+                'value': 4
+            }, {
+                'axis': 'git',
+                'value': 5
+            }, {
+                'axis': 'HTML',
+                'value': 5
+            }, {
+                'axis': 'CSS',
+                'value': 6
+            }, {
+                'axis': 'OO',
+                'value': 7
+            }, {
+                'axis': 'TDD',
+                'value': 7
+            }, {
+                'axis': 'User Exp',
+                'value': 0
+            }, {
+                'axis': 'Basic JS',
+                'value': 0
+            }, {
+                'axis': 'JS Events',
+                'value': 0
+            }, {
+                'axis': 'ES6-7',
+                'value': 0
+            }, {
+                'axis': 'ReactJS',
+                'value': 0
+            }, {
+                'axis': 'NodeJS',
+                'value': 0
+            }, {
+                'axis': 'Data Struc',
+                'value': 0
+            }, {
+                'axis': 'SQL',
+                'value': 0
+            }, {
+                'axis': 'App Server',
+                'value': 0
+            }, {
+                'axis': 'Web Services',
+                'value': 0
+            }, {
+                'axis': 'Mentor',
+                'value': 0
+            }, {
+                'axis': 'Problem Solv',
+                'value': 0
+            }, {
+                'axis': 'PM',
+                'value': 0
+            }],
+        }, {
+            name: 'Two Weeks',
+            axes: [{
+                'axis': 'Logic',
+                'value': 1
+            }, {
+                'axis': 'Basic DS',
+                'value': 2
+            }, {
+                'axis': 'Python',
+                'value': 3
+            }, {
+                'axis': 'git',
+                'value': 4
+            }, {
+                'axis': 'HTML',
+                'value': 5
+            }, {
+                'axis': 'CSS',
+                'value': 6
+            }, {
+                'axis': 'OO',
+                'value': 7
+            }, {
+                'axis': 'TDD',
+                'value': 7
+            }, {
+                'axis': 'User Exp',
+                'value': 0
+            }, {
+                'axis': 'Basic JS',
+                'value': 0
+            }, {
+                'axis': 'JS Events',
+                'value': 0
+            }, {
+                'axis': 'ES6-7',
+                'value': 0
+            }, {
+                'axis': 'ReactJS',
+                'value': 0
+            }, {
+                'axis': 'NodeJS',
+                'value': 0
+            }, {
+                'axis': 'Data Struc',
+                'value': 0
+            }, {
+                'axis': 'SQL',
+                'value': 0
+            }, {
+                'axis': 'App Server',
+                'value': 0
+            }, {
+                'axis': 'Web Services',
+                'value': 0
+            }, {
+                'axis': 'Mentor',
+                'value': 0
+            }, {
+                'axis': 'Problem Solv',
+                'value': 0
+            }, {
+                'axis': 'PM',
+                'value': 0
+            }],
+        }, ];
+        var Lorraine = [{
+            name: 'This Week',
+            axes: [{
+                'axis': 'Logic',
+                'value': 5
+            }, {
+                'axis': 'Basic DS',
+                'value': 4
+            }, {
+                'axis': 'Python',
+                'value': 5
+            }, {
+                'axis': 'git',
+                'value': 4
+            }, {
+                'axis': 'HTML',
+                'value': 5
+            }, {
+                'axis': 'CSS',
+                'value': 4
+            }, {
+                'axis': 'OO',
+                'value': 2
+            }, {
+                'axis': 'TDD',
+                'value': 5
+            }, {
+                'axis': 'User Exp',
+                'value': 4
+            }, {
+                'axis': 'Basic JS',
+                'value': 5
+            }, {
+                'axis': 'JS Events',
+                'value': 4
+            }, {
+                'axis': 'ES6-7',
+                'value': 5
+            }, {
+                'axis': 'ReactJS',
+                'value': 1
+            }, {
+                'axis': 'NodeJS',
+                'value': 2
+            }, {
+                'axis': 'Data Struc',
+                'value': 2
+            }, {
+                'axis': 'SQL',
+                'value': 1
+            }, {
+                'axis': 'App Server',
+                'value': 2
+            }, {
+                'axis': 'Web Services',
+                'value': 2
+            }, {
+                'axis': 'Mentor',
+                'value': 2
+            }, {
+                'axis': 'Problem Solv',
+                'value': 1.5
+            }, {
+                'axis': 'PM',
+                'value': 2
+            }],
+        }, {
+            name: 'Last Week',
+            axes: [{
+                'axis': 'Logic',
+                'value': 1
+            }, {
+                'axis': 'Basic DS',
+                'value': 2
+            }, {
+                'axis': 'Python',
+                'value': 2
+            }, {
+                'axis': 'git',
+                'value': 2
+            }, {
+                'axis': 'HTML',
+                'value': 2
+            }, {
+                'axis': 'CSS',
+                'value': 2
+            }, {
+                'axis': 'OO',
+                'value': 2
+            }, {
+                'axis': 'TDD',
+                'value': 2
+            }, {
+                'axis': 'User Exp',
+                'value': 1
+            }, {
+                'axis': 'Basic JS',
+                'value': 1
+            }, {
+                'axis': 'JS Events',
+                'value': 2
+            }, {
+                'axis': 'ES6-7',
+                'value': 2
+            }, {
+                'axis': 'ReactJS',
+                'value': 1
+            }, {
+                'axis': 'NodeJS',
+                'value': 2
+            }, {
+                'axis': 'Data Struc',
+                'value': 2
+            }, {
+                'axis': 'SQL',
+                'value': 1
+            }, {
+                'axis': 'App Server',
+                'value': 2
+            }, {
+                'axis': 'Web Services',
+                'value': 2
+            }, {
+                'axis': 'Mentor',
+                'value': 2
+            }, {
+                'axis': 'Problem Solv',
+                'value': 1.5
+            }, {
+                'axis': 'PM',
+                'value': 2
+            }],
+        }, {
+            name: 'Two Weeks',
+            axes: [{
+                'axis': 'Logic',
+                'value': 1
+            }, {
+                'axis': 'Basic DS',
+                'value': 2
+            }, {
+                'axis': 'Python',
+                'value': 1
+            }, {
+                'axis': 'git',
+                'value': 1
+            }, {
+                'axis': 'HTML',
+                'value': 2
+            }, {
+                'axis': 'CSS',
+                'value': 2
+            }, {
+                'axis': 'OO',
+                'value': 2
+            }, {
+                'axis': 'TDD',
+                'value': 2
+            }, {
+                'axis': 'User Exp',
+                'value': 1
+            }, {
+                'axis': 'Basic JS',
+                'value': 1
+            }, {
+                'axis': 'JS Events',
+                'value': 2
+            }, {
+                'axis': 'ES6-7',
+                'value': 2
+            }, {
+                'axis': 'ReactJS',
+                'value': 1
+            }, {
+                'axis': 'NodeJS',
+                'value': 2
+            }, {
+                'axis': 'Data Struc',
+                'value': 2
+            }, {
+                'axis': 'SQL',
+                'value': 1
+            }, {
+                'axis': 'App Server',
+                'value': 1
+            }, {
+                'axis': 'Web Services',
+                'value': 2
+            }, {
+                'axis': 'Mentor',
+                'value': 1
+            }, {
+                'axis': 'Problem Solv',
+                'value': 1.5
+            }, {
+                'axis': 'PM',
+                'value': 1
+            }],
+        }, ];
+    </script>
 </head>
 
 <body>
-		<div class="border1" style="float:left;">
-			<div class="center"> <b>Larry 35 35 35</b>  </div>
-			<div id="Larry_div"> </div>
-		</div>
+    <div class="border1" style="float:left;">
+        <div class="center"> <b>Larry 35 35 35</b> </div>
+        <div id="Larry_div"> </div>
+    </div>
 
-		<div class="border1" style="float:left;">
-			<div class="center"> <b>Lorraine 35 35 35</b>  </div>
-			<div id="Lorraine_div"> </div>
-		</div>
+    <div class="border1" style="float:left;">
+        <div class="center"> <b>Lorraine 35 35 35</b> </div>
+        <div id="idLorrDiv"> </div>
+    </div>
 
 </body>
 
 </html>
 
 <script>
-/* Radar chart design created by Nadieh Bremer - VisualCinnamon.com */
-var radar_margin = {top: 45, right: 55, bottom: 45, left: 55},
-	width = Math.min(700, window.innerWidth / 4) - radar_margin.left - radar_margin.right,
-	height = Math.min(width, window.innerHeight - radar_margin.top - radar_margin.bottom);
+    /* Radar chart design created by Nadieh Bremer - VisualCinnamon.com */
+    var radar_margin = {
+            top: 45,
+            right: 55,
+            bottom: 45,
+            left: 55
+        },
+        width = Math.min(700, window.innerWidth / 4) - radar_margin.left - radar_margin.right,
+        height = Math.min(width, window.innerHeight - radar_margin.top - radar_margin.bottom);
 
 
-var c = "rgb(86, 62, 18)"
-var radarChartOptions = {
-	  w: 200,
-	  h: 200,
-	  margin: radar_margin,
-	  maxValue: 5,
-	  levels: 5,
-	  roundStrokes: true,
- 	  color: d3.scaleOrdinal().range(["#EDC951", "#CC333F", "#00A0B0"]),
-	  // color: d3.scaleOrdinal().range(["#0e3e43", "#449a89", "#00A0B0"]),
-//	  legend: { title: 'Some Name', translateX: 130, translateY: 10 },
-	};
+    // var c = "rgb(86, 62, 18)"
+    var radarChartOptions = {
+        w: 200,
+        h: 200,
+        margin: radar_margin,
+        maxValue: 5,
+        levels: 5,
+        roundStrokes: true,
+        color: d3.scaleOrdinal().range(["#EDC951", "#CC333F", "#00A0B0"]),
+        // color: d3.scaleOrdinal().range(["#0e3e43", "#449a89", "#00A0B0"]),
+        //	  legend: { title: 'Some Name', translateX: 130, translateY: 10 },
+    };
 
-	//Call function to draw the Radar chart
-	
-	// RadarChart("#Larry", Larry, radarChartOptions);
-	RadarChart("#Larry_div", Larry, radarChartOptions);
-	RadarChart("#Lorraine_div", Lorraine, radarChartOptions);
+    //Call function to draw the Radar chart
 
+    // RadarChart("#Larry", Larry, radarChartOptions);
+    RadarChart("#Larry_div", Larry, radarChartOptions);
+    RadarChart("#idLorrDiv", Lorraine, radarChartOptions);
 
+    saveSvg(idLorrDiv.childNodes[1], "savesvg.svg");
+
+    function saveSvg(svgEl, name) {
+
+        svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        var svgData = svgEl.outerHTML;
+        var preface = '<?xml version="1.0" standalone="no"?>\r\n';
+        var svgBlob = new Blob([preface, svgData], {
+            type: "image/svg+xml;charset=utf-8"
+        });
+        var svgUrl = URL.createObjectURL(svgBlob);
+        var downloadLink = document.createElement("a");
+        downloadLink.href = svgUrl;
+        downloadLink.download = name;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
 </script>

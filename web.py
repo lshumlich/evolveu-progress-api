@@ -152,7 +152,9 @@ def getAll():
 		# user = get_user(content)
 		# if user.admin:
 		if True:
-			results = sql.get_results_obj()
+			results = {}
+			results['results'] = sql.get_results_obj()
+			results['questions'] = sql.get_questions()
 			return jsonify(results)
 	except Exception as e:
 		print('Not an admin user ***', e)
