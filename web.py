@@ -43,14 +43,6 @@ def hello():
 	# print("Session for this dude:", s)
 	return "Hello World! from EvolveU Evaluation."
 
-@app.route("/who") 
-def who():
-	# session["lfs"] = "Larry"
-	# s = escape(str(session))
-	# print("Session for this dude:", s)
-	print(id(valid_email))
-	return f"Values: {valid_email.values()} id: {id(valid_email)}"
-
 @app.route("/gsignon", methods = ['POST'])
 def google_signon():
 	# time.sleep(5)		# Testing only
@@ -132,7 +124,7 @@ def register():
 	try:
 		content = request.get_json()
 		email = get_email(content)
-		sql.insert_users(content["name"], email, None, False)
+		sql.insert_users(content["name"], email, None, None, False)
 		return jsonify({'name':content["name"]}), 200
 
 	except KeyError as e:
@@ -334,12 +326,10 @@ def comments(uuid, date=None, student=None, qtype=None):
 # Utilities not to be directly attached to routes for security reasons
 # 
 
-# valid_email = {}
 id_key = "user_token"
 
 def set_email(obj, email):
 	sql.insert_session(obj[id_key], email)
-	# valid_email[obj[id_key]] = email
 
 def get_email(obj):
 	r = sql.get_session(obj[id_key])
@@ -347,14 +337,9 @@ def get_email(obj):
 		return r.email
 	else:
 		raise KeyError("Not a valid request")
-	# return valid_email[obj[id_key]]
 
 def clear_email(obj):
 	sql.delete_session(obj[id_key])
-	# return valid_email.pop(obj[id_key], None)
-
-# def clear_sessions():
-# 	valid_email = {}
 
 #
 # must be in the session and in the user table

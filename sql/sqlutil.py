@@ -82,8 +82,8 @@ def init_users():
 		cur.close()
 		conn.close()
 
-	sql.sql.insert_users('Larry Shumlich', 'lshumlich@gmail.com', '2019-09-30', True)
-	sql.sql.insert_users('Lorraine Shumlich', 'lmshumlich@gmail.com', '2019-09-30', False)
+	sql.sql.insert_users('Larry Shumlich', 'lshumlich@gmail.com', 'FSD0', '2019-09-30', True)
+	sql.sql.insert_users('Lorraine Shumlich', 'lmshumlich@gmail.com', 'FSD0', '2019-09-30', False)
 	# print('--Users Inserted: 2')
 
 def get_user_by_uuid():

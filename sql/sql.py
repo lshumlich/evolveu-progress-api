@@ -25,6 +25,7 @@ Create table users (
 	id serial not null primary key,
 	name varChar(50) not null,
 	email varChar(50) not null unique,
+	cohort varChar(10),
 	uuid varChar(36) not null,
 	start_date date,
 	admin boolean not null
@@ -129,47 +130,47 @@ def get_questions(qtype=None):
 # f8862239-ec71-43b9-b9a9-5cf918040f08 (Sample of a uuid)
 
 insert_users_string = """
-insert into users (name, email, start_date, admin, uuid) values(%s, %s, %s, %s, %s)
+insert into users (name, email, cohort, start_date, admin, uuid) values(%s, %s, %s, %s, %s, %s)
 """
 
-def insert_users(name, email, start_date, admin):
+def insert_users(name, email, cohort, start_date, admin):
 	""" 
 	Insert a single user into the users table.
 	"""
-	return sql_util(insert_users_string, [name, email, start_date, admin, str(uuid.uuid4())])
+	return sql_util(insert_users_string, [name, email, cohort, start_date, admin, str(uuid.uuid4())])
 
 get_users_string = """
-select id, name, email, uuid, start_date, admin from users;
+select id, name, email, cohort, uuid, start_date, admin from users;
 """
 
 def get_users():
 	sql_results = select(get_users_string,None)
 	res = []
 	for r in sql_results:
-		res.append(things.user.User(r[0], r[1],r[2],r[3],r[4],r[5]))
+		res.append(things.user.User(r[0], r[1], r[2], r[3], r[4], r[5], r[6]))
 
 	return res
 
 select_user_by_ggid = """
-select id, name, email, uuid, start_date, admin from users where uuid = %s;
+select id, name, email, cohort, uuid, start_date, admin from users where uuid = %s;
 """
 
 def get_user_by_uuid(ggid):
 	sql_results = select(select_user_by_ggid,[ggid])
 	if sql_results:
 		r = sql_results[0]
-		return things.user.User(r[0], r[1],r[2],r[3],r[4],r[5])
+		return things.user.User(r[0], r[1], r[2], r[3], r[4], r[5], r[6])
 	return None
 
 select_user_by_email = """
-select id, name, email, uuid, start_date, admin from users where email = %s;
+select id, name, email, cohort, uuid, start_date, admin from users where email = %s;
 """
 
 def get_user_by_email(email):
 	sql_results = select(select_user_by_email,[email])
 	if sql_results:
 		r = sql_results[0]
-		return things.user.User(r[0], r[1],r[2],r[3],r[4],r[5])
+		return things.user.User(r[0], r[1], r[2], r[3], r[4], r[5], r[6])
 	return None
 
 insert_results_string = """

@@ -37,19 +37,19 @@ class TestWeeklyReport(unittest.TestCase):
 		# print("one person:", report.results[0])
 		# based on the number of ratings
 		self.assertEqual('Target',report.class_progress[0].name)
-		self.assertEqual([0,8,17], report.class_progress[0].weekly)
+		self.assertEqual([0,6,12], report.class_progress[0].weekly)
 
 		self.assertEqual('Larry Shumlich',report.class_progress[1].name)
 		self.assertEqual([3,4,5], report.class_progress[1].weekly)
 
 		# based on the number of ratings
-		self.assertEqual([{'week':0, 'score':0},{'week':1, 'score':8},{'week':2, 'score':17}],
+		self.assertEqual([{'week':0, 'score':0},{'week':1, 'score':6},{'week':2, 'score':12}],
 						report.class_progress[0].get_weekly_results())
 		self.assertEqual([{'week':0, 'score':3},{'week':1, 'score':4},{'week':2, 'score':5}],
 						report.class_progress[1].get_weekly_results())
 
 		# based on the number of ratings
-		self.assertEqual(17,
+		self.assertEqual(12,
 						report.class_progress[0].get_last_score())
 		self.assertEqual(5,
 						report.class_progress[1].get_last_score())

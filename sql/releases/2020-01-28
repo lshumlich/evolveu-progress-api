@@ -1,0 +1,10 @@
+
+This release is about adding a cohort grouping to the user table
+so we can report by cohort seperatly. I haven't fully determine the
+best way to update the attribute, we'll figure that out later.
+
+SQL Commands
+
+ALTER TABLE users ADD cohort varchar(10);
+
+update users set cohort = 'FSD3' where cohort is null;

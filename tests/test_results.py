@@ -21,30 +21,30 @@ class TestResults(unittest.TestCase):
 
 	def test_results(self):
 		# def __init__(self, date, student_id, student, result, going_well, issues, what_to_try):
-		result_09_03 = things.results.Result('2018-09-03', 1000, 'Larry Shumlich', 
+		result_09_03 = things.results.Result('2018-09-03', 1000, 'Larry Shumlich', 'larry@evolveu.ca',
 										{'Logic':0,'Basic DS':1},
 										'going well', 'real issues', 'try new stuff', '100',
 										'true', datetime.date(2019,5,30))
-		result_08_27 = things.results.Result('2018-08-27', 1000, 'Larry Shumlich', 
+		result_08_27 = things.results.Result('2018-08-27', 1000, 'Larry Shumlich', 'larry@evolveu.ca',
 										{'Logic':2,'Basic DS':0},
 										'going well', 'real issues', 'try new stuff', '100',
 										'true', datetime.date(2019,5,30))
-		result_08_20 = things.results.Result('2018-08-20', 1000, 'Larry Shumlich', 
+		result_08_20 = things.results.Result('2018-08-20', 1000, 'Larry Shumlich', 'larry@evolveu.ca',
 										{'Logic':0,'Basic DS':3},
 										'going well', 'real issues', 'try new stuff', '100',
 										'true', datetime.date(2019,5,30))
-		result_08_13 = things.results.Result('2018-08-13', 1000, 'Larry Shumlich', 
+		result_08_13 = things.results.Result('2018-08-13', 1000, 'Larry Shumlich', 'larry@evolveu.ca',
 										{'Logic':4,'Basic DS':0},
 										'going well', 'real issues', 'try new stuff', '100',
 										'true', datetime.date(2019,5,30))
-		result_08_06 = things.results.Result('2018-08-06', 1000, 'Larry Shumlich', 
+		result_08_06 = things.results.Result('2018-08-06', 1000, 'Larry Shumlich', 'larry@evolveu.ca',
 										{'Logic':5,'Basic DS':5},
 										'going well', 'real issues', 'try new stuff', '100',
 										'true', datetime.date(2019,5,30))
 
 		self.assertEqual('Larry Shumlich', result_09_03.student);
 		self.assertEqual('Larry', result_09_03.first_name());
-		self.assertEqual('Larry_1000', result_09_03.field_name());
+		self.assertEqual('student_1000', result_09_03.field_name());
 
 		self.assertEqual('2018-09-03', result_09_03.get_prev_result(0).date)
 		self.assertIsNone(result_09_03.get_prev_result(1))
@@ -103,7 +103,7 @@ class TestResults(unittest.TestCase):
 
 	def test_prev_total_for_questions(self):
 		# def __init__(self, date, student_id, student, result, going_well, issues, what_to_try):
-		result_2019_03_18 = things.results.Result('2019-03-18', 1000, 'Larry Shumlich', 
+		result_2019_03_18 = things.results.Result('2019-03-18', 1000, 'Larry Shumlich', 'larry@evolveu.ca',
 										{'Logic':2,'JS':3, 'PY':4},
 										'going well', 'real issues', 'try new stuff', '100',
 										'true', datetime.date(2019,5,30))
@@ -121,11 +121,11 @@ class TestResults(unittest.TestCase):
 		y = datetime.datetime.now()
 		print('date--->', x, y)
 		# def __init__(self, date, student_id, student, result, going_well, issues, what_to_try):
-		result1 = things.results.Result(datetime.date(2019,3,18), 1000, 'Larry Shumlich', 
+		result1 = things.results.Result(datetime.date(2019,3,18), 1000, 'Larry Shumlich', 'larry@evolveu.ca',
 										{'Logic':2,'JS':3, 'PY':4},
 										'going well', 'real issues', 'try new stuff', '100',
 										'true', datetime.date(2019,5,30))
-		result2 = things.results.Result(datetime.datetime.now(), 1000, 'Larry Shumlich', 
+		result2 = things.results.Result(datetime.datetime.now(), 1000, 'Larry Shumlich', 'larry@evolveu.ca',
 										{'Logic':2,'JS':3, 'PY':4},
 										'going well', 'real issues', 'try new stuff', '100',
 										'true', datetime.date(2019,5,30))

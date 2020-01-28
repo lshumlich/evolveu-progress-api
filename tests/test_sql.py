@@ -104,6 +104,9 @@ class TestSql(unittest.TestCase):
 		self.assertEqual(user.uuid, uuid)
 		self.assertEqual(user.email, email)
 
+		user = sql.sql.get_user_by_email('lshumlich@gmail.com')
+		self.assertEqual(user.cohort, 'FSD0')
+
 
 	def test_questions(self):
 		sql.sqlutil.init_questions()

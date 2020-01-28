@@ -6,7 +6,9 @@ import things.struc
 
 
 class Result(things.struc.Struc):
-	def __init__(self, date, student_id, student, email, results, going_well, issues, what_to_try, exercise, industryproj, predcompdate):
+	def __init__(self, date, student_id, student, email, 
+				results, going_well, issues, what_to_try, 
+				exercise, industryproj, predcompdate):
 		self.date = date
 		self.student_id = student_id
 		self.student = student
