@@ -67,6 +67,34 @@ Create table session (
 );
 """
 
+# --- Options
+
+drop_options = """
+Drop table options;
+"""
+
+create_options = """
+Create table options (
+	id serial not null primary key,
+	key varChar(10) not null unique,
+	value text not null
+);
+"""
+
+# --- compdate
+
+drop_compdates = """
+Drop table compdates;
+"""
+
+create_compdates = """
+Create table compdates (
+	id serial not null primary key,
+	student integer not null,
+	values text
+);
+"""
+
 default_connect = """
 dbname=larry user=larry
 """
@@ -117,14 +145,24 @@ def delete_all_sessions():
 	sql_util(delete_all_sessions_string, [])
 
 def get_questions(qtype=None):
+	data = get_options('questions');
 	results = []
 	columns = ('type', 'code', 'question')
-	for l in sql.data.questions.split('\n'):
+	for l in data.split('\n'):
 		if l:
-			a = l.split('@')
+			a = l.split('\t')
 			if (not qtype or qtype == a[0]):
-				results.append(dict(zip(columns, l.split('@'))))
+				results.append(dict(zip(columns, l.split('\t'))))
+	return results
 
+def get_comps():
+	data = get_options('comps')
+	results = []
+	columns = ('code', 'comp')
+	# for l in sql.data.comps.split('\n'):
+	for l in data.split('\n'):
+		if l:
+			results.append(dict(zip(columns, l.split('\t'))))
 	return results
 
 # f8862239-ec71-43b9-b9a9-5cf918040f08 (Sample of a uuid)
@@ -319,6 +357,80 @@ update results
 	where student = %s and date = %s;
 """
 	sql_util(sql,[value, student_id, date])
+
+
+# ----- options CRUD
+
+insert_options_string = """
+insert into options (key, value) values(%s, %s)
+"""
+
+def insert_options(key, value):
+	""" 
+	Insert an option into the options table.
+	"""
+	return sql_util(insert_options_string, [key, value])
+
+
+def update_options(key, value):
+	sql = \
+f"""
+update options
+	set value = %s
+	where key = %s;
+"""
+	sql_util(sql,[value, key])
+
+select_options = """
+select value from options where key = %s;
+"""
+
+def get_options(key):
+	results = select(select_options,[key])
+	if(results):
+		return results[0][0]
+	else:
+		return None
+
+# ----- compdates CRUD
+
+def get_compdates(student):
+	sql = \
+f"""
+select values from compdates where student = %s;
+"""
+	results = select(sql,[student])
+	if(results):
+		return results[0][0]
+	else:
+		return '{}'
+
+
+def insert_or_update_compdates(student, comp, date):
+	""" 
+	Insert or update a comp date into the compdates table.
+	"""
+	result = get_compdates(student)
+
+	if (result != '{}'):
+		new_result = json.loads(result)
+		new_result[comp] = date
+		sql = \
+f"""
+update compdates
+	set values = %s
+	where student = %s;
+"""
+		result = sql_util(sql,[json.dumps(new_result), student])
+	else:
+		new_result = {comp:date}
+		sql = \
+f"""
+insert into compdates (student, values) values(%s, %s)
+"""
+		result = sql_util(sql,[student, json.dumps(new_result)])
+
+	return result
 
 # ----- general utilitis
 

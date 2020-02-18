@@ -12,6 +12,7 @@ import os
 import datetime
 import time
 import io
+import traceback
 from flask import Flask, request, session, escape, jsonify, send_file, render_template
 from flask_cors import CORS
 import psycopg2
@@ -79,6 +80,7 @@ def google_signon():
 			'admin': admin}), 200
 
 	except Exception as e:
+		traceback.print_exc()
 		print('**** Not a valid request ***', e)
 
 	# print('google_signon not a valid request')
@@ -95,6 +97,7 @@ def valid_user():
 		# print('----user:', user)
 		return jsonify({'name':user.name, 'admin':user.admin}), 200
 	except Exception as e:
+		traceback.print_exc()
 		print('**** Not a valid request ***', e)
 
 	return jsonify('{}'), 404
@@ -132,9 +135,47 @@ def register():
 
 	return jsonify('{}'), 404
 
+
+#
+# since questions are used thousands of times 
+# only refresh when needed
+#
+
+save_questions = None
+def refresh_questions():
+	print('*******refreshing questions*************')
+	global save_questions
+	save_questions = sql.get_questions()
+
+refresh_questions()
+
 @app.route("/questions")
 def questions():
-	return jsonify(sql.get_questions())
+	return jsonify(save_questions)
+
+#
+# since comps are used thousands of times 
+# only refresh when needed
+#
+
+save_comps = None
+def refresh_comps():
+	print('*******refreshing comps*************')
+	global save_comps
+	save_comps = sql.get_comps()
+
+refresh_comps()
+
+@app.route("/comps")
+def comps():
+	return jsonify(save_comps)
+
+#
+# convenience method to minimize requests
+#
+@app.route("/questionsandcomps")
+def questions_and_comps():
+	return jsonify({'questions': save_questions, 'comps': save_comps})
 
 
 @app.route("/all", methods = ['POST'])
@@ -142,7 +183,7 @@ def getAll():
 	try:
 		content = request.get_json()
 		# user = get_user(content)
-		# if user.admin:
+		# if user.admin:	
 		if True:
 			results = {}
 			results['results'] = sql.get_results_obj()
@@ -191,7 +232,10 @@ def results(date=None):
 
 		results, going_well, issues, what_to_try, exercise, industryproj, predcompdate  = sql.get_result_object_by_student_date(id, str(monday))
 
+		compdates = json.loads(sql.get_compdates(id))
+
 		return jsonify({'results':results,
+						'compdates': compdates,
 						'last_monday': str(last_monday), 
 						'this_monday': str(monday), 
 						'next_monday': str(next_monday),
@@ -225,12 +269,17 @@ def update():
 		id = user.id
 
 		row = sql.get_results_by_student_date(id, content['date'])
+		# print('---Starting update:',id, content['date'], content['code'], content['value'])
 
 		if content['type'] == 'score':
-			sql.update_result_by_student_date(id, content['date'], content['code'], int(content['value']))
-		else:
-			sql.update_result_text_student_date(id, content['date'], content['code'], content['value'])
+			result = sql.update_result_by_student_date(id, content['date'], content['code'], int(content['value']))
+		elif content['type'] == 'text':
+			result = sql.update_result_text_student_date(id, content['date'], content['code'], content['value'])
+		elif content['type'] == 'compdate':
+			result = sql.insert_or_update_compdates(id,content['code'],content['value'])
+
 		# print('We should update the text:',content['code'], content['date'], content['code'], int(content['value'])
+		# print('--- result:', result)
 
 		return jsonify({'status': 'ok'}), 200
 
@@ -350,6 +399,40 @@ def get_user(obj):
 	if not user:
 		raise KeyError("user not found in users table")
 	return user
+
+#
+#  Get an option
+#
+@app.route("/getoption/<option>/", methods = ['POST'])
+def getOption(option):
+	# print('getoption:',option)
+	result = sql.get_options(option)
+	if result:
+		return result
+	else:
+		return '',404
+
+@app.route("/updateoption", methods = ['POST'])
+def update_option():
+	# print('##################update_option')
+	try :
+		# print('----- request:',request)
+		content = request.get_json()
+		# print('----- content:',content)
+		# print(content['key'], content['value'])
+		sql.update_options(content['key'], content['value'])
+		if (content['key'] == 'questions'):
+			refresh_questions()
+		if (content['key'] == 'comps'):
+			refresh_comps()
+		return jsonify({'status': 'ok'}), 200
+
+	except KeyError as e:
+		traceback.print_exc()
+		print('**** Not a valid option, or data incomplete ***', e)
+
+	return jsonify('{}'), 404
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

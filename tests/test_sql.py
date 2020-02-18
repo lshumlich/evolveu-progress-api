@@ -12,6 +12,7 @@ PYTHONPATH=. pytest tests/test_sql.py -s -k _obj
 """
 import unittest
 import datetime
+import json
 import sql.sql
 import sql.sqlutil
 import things.results
@@ -218,6 +219,54 @@ class TestSql(unittest.TestCase):
 		results = sql.sql.get_missing_for_date("2018-09-11")
 		self.assertEqual(1, len(results))
 		self.assertEqual('Lorraine Shumlich', results[0].name)
+
+
+# -----------------------------------------
+# PYTHONPATH=. pytest tests/test_sql.py -k options -s
+#
+	def test_crud_options(self):
+		# print('update options')
+		original_data = "data	at1	a2	a3	a4"
+		new_data = "new data	at1	a2	a3"
+		self.assertEqual(0, sql.sqlutil.init_options())
+
+		results = sql.sql.insert_options("newstuff", original_data)
+		self.assertEqual(0, len(results))
+		
+		results = sql.sql.get_options("newstuff")
+		self.assertEqual(original_data, results)
+		self.assertEqual(4, results.count('	'))
+
+		results = sql.sql.update_options("newstuff", new_data)
+		results = sql.sql.get_options("newstuff")
+		# print(results)
+		self.assertEqual(new_data, results)
+		self.assertEqual(3, results.count('	'))
+
+		results = sql.sql.get_options("badkey")
+		self.assertIsNone(results)
+
+# -----------------------------------------
+# PYTHONPATH=. pytest tests/test_sql.py -k compdates -s
+#
+	def test_crud_compdates(self):
+		print('crud compdates')
+		self.assertEqual(0, sql.sqlutil.init_compdates())
+		results = sql.sql.get_compdates(989898)
+		self.assertEqual('{}',results)
+		# self.assertIsNone(results)
+
+		results = sql.sql.insert_or_update_compdates(1,'110A','2020-02-17')
+		self.assertEqual(0, len(results))
+
+		results = sql.sql.insert_or_update_compdates(1,'110B','2020-02-18')
+		self.assertEqual(0, len(results))
+
+		results = sql.sql.get_compdates(1)
+
+		self.assertEqual({'110A':'2020-02-17', '110B':'2020-02-18'}, json.loads(results))
+
+# ----------------------------------------- Test helpers
 
 	def create_test_data1(self):
 		sql.sqlutil.init_users()

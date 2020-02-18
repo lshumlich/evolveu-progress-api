@@ -22,7 +22,7 @@ print("--- Starting", __file__)
 
 # ------ 	Questions
 
-def load_questions():
+def xxx_load_questions():
 	""" 
 	Load the questions into an internal array so we can use them later.
 	"""
@@ -47,6 +47,10 @@ def init_questions():
 
 def questions():
 	for q in sql.sql.get_questions():
+		print('-', q)
+
+def comps():
+	for q in sql.sql.get_comps():
 		print('-', q)
 
 # ------ 	Users
@@ -94,7 +98,7 @@ def get_user_by_uuid():
 
 	# print("just Playing", sys.argv)
 
-# ------ 	Users
+# ------ 	session
 
 def init_session():
 	""" 
@@ -156,6 +160,77 @@ def init_results():
 		conn.close()
 	return 0
 
+# ------ 	Options
+
+def init_options():
+	""" 
+	Delete the table (if it exists) and create a new options table. Insert a little data.
+	"""
+	try:
+		# print("-- Init Options --");
+		conn = psycopg2.connect(sql.sql.get_connect_string(), sslmode='require')
+		cur = conn.cursor()
+		try:
+			res = cur.execute(sql.sql.drop_options)
+		except:
+			print('Delete failed',sys.exc_info()[1])
+			conn.rollback()
+
+		res = cur.execute(sql.sql.create_options)
+
+		conn.commit()
+	except psycopg2.IntegrityError:
+		print('*** Duplicate Key***')
+		print('--1--',sys.exc_info()[1])
+		raise
+	except:
+		print('***We had a problem Huston...', sys.exc_info())
+		traceback.print_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+		raise
+	finally:
+		cur.close()
+		conn.close()
+
+	sql.sql.insert_options('questions',sql.data.questions)
+	sql.sql.insert_options('comps',sql.data.comps)
+	# sql.sql.insert_options('Lorraine Shumlich', 'lmshumlich@gmail.com', 'FSD0', '2019-09-30', False)
+	# print('--Users Inserted: 2')
+	return 0
+
+
+# ------ 	Options
+
+def init_compdates():
+	""" 
+	Delete the table (if it exists) and create a new one.
+	"""
+	try:
+		# print("-- Init Options --");
+		conn = psycopg2.connect(sql.sql.get_connect_string(), sslmode='require')
+		cur = conn.cursor()
+		try:
+			res = cur.execute(sql.sql.drop_compdates)
+		except:
+			print('Delete failed',sys.exc_info()[1])
+			conn.rollback()
+
+		res = cur.execute(sql.sql.create_compdates)
+
+		conn.commit()
+	except psycopg2.IntegrityError:
+		print('*** Duplicate Key***')
+		print('--1--',sys.exc_info()[1])
+		raise
+	except:
+		print('***We had a problem Huston...', sys.exc_info())
+		traceback.print_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
+		raise
+	finally:
+		cur.close()
+		conn.close()
+
+	return 0
+
 def connect():
 	print("Connect String:", sql.sql.get_connect_string())
 
@@ -182,18 +257,24 @@ Pass one of the following options:
 init-users          : drop and create the users table and add two users
 init-results        : drop and create the results table
 init-session		: drop and create the session table
+init-options		: drop and create the options table
+init-compdates      : drop and create the compdates table
 ---
 questions           : will show the current questions loaded in the database
+comps               : will show the current competencies loaded in the database
 get-user-by-uuid    : get a user based on uuid
 connect             : will show the connection string that will be used
 test                : just some play stuff
 """)
 
-options = {
+help_options = {
 	"init-users" : init_users,
 	"init-results" : init_results,
 	"init-session" : init_session,
+	"init-options" : init_options,
+	"init-compdates" : init_compdates,
 	"questions" : questions,
+	"comps" : comps,
 	"get-user-by-uuid" : get_user_by_uuid,
 	"connect" : connect,
 	"test" : test,
@@ -202,5 +283,5 @@ options = {
 
 if __name__ == '__main__':
 	option = sys.argv[1] if len(sys.argv) > 1 else 'usage'
-	f = options.get(option, usage)
+	f = help_options.get(option, usage)
 	f()
