@@ -1,0 +1,1 @@
+pg_restore --verbose --clean --no-acl --no-owner -U larry -d larry3 latest.dump

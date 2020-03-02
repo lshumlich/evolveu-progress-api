@@ -188,6 +188,8 @@ def getAll():
 			results = {}
 			results['results'] = sql.get_results_obj()
 			results['questions'] = sql.get_questions()
+			results['compdates'] = sql.get_all_compdates()
+			results['comps'] = save_comps
 			return jsonify(results)
 	except Exception as e:
 		print('Not an admin user ***', e)

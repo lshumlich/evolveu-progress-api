@@ -406,6 +406,19 @@ select values from compdates where student = %s;
 		return '{}'
 
 
+def get_all_compdates():
+	sql = \
+f""" 
+select student, values from compdates;
+"""
+	results = select(sql,[])
+	arr = []
+	for r in results:
+		arr.append({'student':r[0], 'values':json.loads(r[1])})
+	return arr
+
+
+
 def insert_or_update_compdates(student, comp, date):
 	""" 
 	Insert or update a comp date into the compdates table.

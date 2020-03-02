@@ -250,7 +250,7 @@ class TestSql(unittest.TestCase):
 # PYTHONPATH=. pytest tests/test_sql.py -k compdates -s
 #
 	def test_crud_compdates(self):
-		print('crud compdates')
+		# print('crud compdates')
 		self.assertEqual(0, sql.sqlutil.init_compdates())
 		results = sql.sql.get_compdates(989898)
 		self.assertEqual('{}',results)
@@ -265,6 +265,22 @@ class TestSql(unittest.TestCase):
 		results = sql.sql.get_compdates(1)
 
 		self.assertEqual({'110A':'2020-02-17', '110B':'2020-02-18'}, json.loads(results))
+
+		# results = sql.sql.insert_or_update_compdates(2,'110B','2020-02-18')
+
+		# results = sql.sql.get_compdates()
+		# print(results)
+
+	def test_get_all_compdates(self):
+		self.assertEqual(0, sql.sqlutil.init_compdates())
+		results = sql.sql.insert_or_update_compdates(1,'110A','2020-02-17')
+		results = sql.sql.insert_or_update_compdates(2,'110B','2020-02-18')
+		results = sql.sql.insert_or_update_compdates(3,'110C','2020-02-19')
+		# sql.sqlutil.init_users()
+		# self.assertTrue(False)
+		result = sql.sql.get_all_compdates()
+		self.assertEqual('2020-02-18', result[1]['values']['110B'])
+		self.assertEqual('2020-02-19', result[2]['values']['110C'])
 
 # ----------------------------------------- Test helpers
 
